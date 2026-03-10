@@ -9,22 +9,7 @@ import {
 } from "@repo/ui/components/ui/card";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
-import { Label } from "@repo/ui/components/ui/label";
-import { Textarea } from "@repo/ui/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@repo/ui/components/ui/select";
 import { Badge } from "@repo/ui/components/ui/badge";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@repo/ui/components/ui/tabs";
 import {
   Search,
   UserSearch,
@@ -34,14 +19,13 @@ import {
   MapPin,
   Image as ImageIcon,
   Loader2,
-  AlertTriangle,
   Shield,
   Database,
   ExternalLink,
   Copy,
   RefreshCw,
 } from "lucide-react";
-import { use, useState } from "react";
+import { useState } from "react";
 import { OsintServices } from "@/services/osintServices";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -107,25 +91,16 @@ export default function OsintPage() {
       searchType: searchType,
     },
     token || "");
-    
-    console.log("Search initiated:", response);
 
+    console.log("resultat: ", response)
     // Simulate search - in production this would call the API
     setTimeout(() => {
       setResults({
         target,
         type: searchType,
-        confidence: Math.random() * 0.5 + 0.5,
-        findings: {
-          emails: ["john.doe@example.com"],
-          phones: ["+33 6 12 34 56 78"],
-          socialProfiles: [
-            "linkedin.com/in/johndoe",
-            "twitter.com/johndoe",
-            "instagram.com/johndoe",
-          ],
-          riskScore: Math.random() * 0.4 + 0.2,
-        },
+        confidence: response.confidence,
+        findings: response.result.findings,
+        sources: response.result.sources
       });
       setIsSearching(false);
     }, 2000);
@@ -211,26 +186,7 @@ export default function OsintPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Risk Score */}
-              <div className="p-4 rounded-lg bg-gray-800/50">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-400">Score de Risque</span>
-                  <Badge
-                    variant={
-                      results.findings.riskScore > 0.5
-                        ? "destructive"
-                        : "default"
-                    }
-                  >
-                    {(results.findings.riskScore * 100).toFixed(0)}%
-                  </Badge>
-                </div>
-                <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${results.findings.riskScore > 0.5 ? "bg-red-500" : "bg-green-500"}`}
-                    style={{ width: `${results.findings.riskScore * 100}%` }}
-                  />
-                </div>
-              </div>
+              
 
               {/* Emails */}
               {results.findings.emails &&
@@ -294,6 +250,30 @@ export default function OsintPage() {
                     </h4>
                     <div className="space-y-2">
                       {results.findings.socialProfiles.map(
+                        (profile: string, i: number) => (
+                          <div
+                            key={i}
+                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
+                          >
+                            <span className="text-white">{profile}</span>
+                            <Button variant="ghost" size="sm">
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                )}
+              {results.sources &&
+                results.sources.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      Sources
+                    </h4>
+                    <div className="space-y-2">
+                      {results.sources.map(
                         (profile: string, i: number) => (
                           <div
                             key={i}

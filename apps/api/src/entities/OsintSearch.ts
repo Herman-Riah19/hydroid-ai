@@ -27,9 +27,9 @@ export class OsintSearch {
   @Property()
   query!: string;
 
-  @Column({ type: "text", nullable: true })
+  @Column({ type: "simple-json", nullable: true })
   @Property()
-  results?: string;
+  result?: Record<string, any>;
 
   @Column({ nullable: true })
   @Property()

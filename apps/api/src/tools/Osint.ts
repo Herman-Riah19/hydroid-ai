@@ -5,6 +5,7 @@ import {
   OsintResult,
   OsintSearchParams,
 } from "../types/osintType.js";
+import { Logger } from "@tsed/logger";
 
 export class OsintSkill implements IOSINTSkill {
   readonly name = "OsintSkill";
@@ -13,6 +14,7 @@ export class OsintSkill implements IOSINTSkill {
   private config: OsintConfig;
   private scrapingSkill: ScrapingSkill;
   private initialized = false;
+  private logger: Logger;
 
   constructor(
     scrapingSkill: ScrapingSkill,
@@ -74,12 +76,14 @@ export class OsintSkill implements IOSINTSkill {
       `"${name}" linkedin`,
       `"${name}" twitter`,
       `"${name}" facebook`,
+      `"${name}" Instagram`,
     ];
 
     for (const query of queries) {
       try {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
         const data = await this.scrapingSkill.scrape({ url: searchUrl });
+        this.logger.info("Les liens: " + data)
 
         const emails = await this.scrapingSkill.extractEmails(
           data.content || "",

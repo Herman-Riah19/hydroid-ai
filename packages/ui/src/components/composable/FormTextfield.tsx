@@ -1,21 +1,9 @@
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@radix-ui/react-select";
+
+import { Textarea } from "../ui/textarea";
 import { UseFormReturn } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { Input } from "../ui/input";
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "../ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface FormTextfieldProps {
   form: UseFormReturn<any>;

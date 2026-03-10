@@ -8,7 +8,7 @@ import {
   ModelCard,
   SearchResultCard,
   ActionCard,
-} from "../card/index.js";
+} from "../card/index";
 
 export {
   FeatureCard,

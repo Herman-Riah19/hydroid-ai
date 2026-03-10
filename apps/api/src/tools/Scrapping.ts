@@ -6,7 +6,6 @@ import {
   ScrapingConfig,
   ScrapingOptions,
 } from "../types/scrappingType.js";
-import { Retryable, Timed, Cached, Logged } from "../decorators/index.js";
 
 export class ScrapingSkill implements IScrapingSkill {
   readonly name = "ScrapingSkill";
@@ -47,10 +46,6 @@ export class ScrapingSkill implements IScrapingSkill {
     return this.scrape(options);
   }
 
-  @Timed(45000)
-  @Retryable(3, 2000)
-  @Cached(60000)
-  @Logged()
   async scrape(options: ScrapingOptions): Promise<ScrapedData> {
     this.ensureInitialized();
 
@@ -105,7 +100,6 @@ export class ScrapingSkill implements IScrapingSkill {
     return result;
   }
 
-  @Timed(120000)
   async scrapeMultiple(
     urls: string[],
     options?: Partial<ScrapingOptions>,
@@ -122,26 +116,22 @@ export class ScrapingSkill implements IScrapingSkill {
     return results;
   }
 
-  @Cached(300000)
   async extractEmails(text: string): Promise<string[]> {
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
     return text.match(emailRegex) || [];
   }
 
-  @Cached(300000)
   async extractPhoneNumbers(text: string): Promise<string[]> {
     const phoneRegex =
       /(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})/g;
     return text.match(phoneRegex) || [];
   }
 
-  @Cached(300000)
   async extractUrls(text: string): Promise<string[]> {
     const urlRegex = /https?:\/\/[^\s]+/g;
     return text.match(urlRegex) || [];
   }
 
-  @Timed(30000)
   async socialMediaScrape(url: string): Promise<{
     platform?: string;
     username?: string;

@@ -1,8 +1,9 @@
-import { Injectable, Inject } from "@tsed/di";
+import { Injectable, Inject, logger } from "@tsed/di";
 import { SkillFactory } from "../factories/SkillFactory.js";
 import { OsintSearchesRepository } from "../repositories/OsintSearchesRepository.js";
-import { OsintSearch } from "../entities/OsintSearch.js";
 import { SearchStatus, OsintType } from "../entities/enums/index.js";
+import { Logger } from "@tsed/logger";
+import { OsintSearch } from "src/entities/OsintSearch.js";
 
 const OSINT_TYPE_MAP: Record<
   string,
@@ -16,11 +17,11 @@ const OSINT_TYPE_MAP: Record<
 
 @Injectable()
 export class OsintExecutorService extends OsintSearchesRepository {
-  constructor(@Inject() private skillFactory: SkillFactory) {
+  constructor(@Inject() private skillFactory: SkillFactory, private logger: Logger) {
     super();
   }
 
-  async executeSearch(searchId: string): Promise<OsintSearch> {
+  async executeSearch(searchId: string): Promise<any> {
     const search = await this.repository.findOne({ where: { id: searchId } });
     if (!search) {
       throw new Error("Search not found");
@@ -35,16 +36,15 @@ export class OsintExecutorService extends OsintSearchesRepository {
         target: search.query,
         type: osintType,
       });
-
       return this.completeSearch(
         searchId,
-        JSON.stringify(result),
+        result,
         result.confidence,
       );
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
-      return this.failSearch(searchId, errorMessage);
+      return this.failSearch(searchId);
     }
   }
 
@@ -89,20 +89,20 @@ export class OsintExecutorService extends OsintSearchesRepository {
 
   async completeSearch(
     searchId: string,
-    results: string,
+    result: Record<string, any>,
     confidence?: number,
   ): Promise<OsintSearch> {
+
     return this.update(searchId, {
       status: SearchStatus.COMPLETED,
-      results,
+      result,
       confidence,
     });
   }
 
-  async failSearch(searchId: string, error: string): Promise<OsintSearch> {
+  async failSearch(searchId: string): Promise<OsintSearch> {
     return this.update(searchId, {
       status: SearchStatus.FAILED,
-      results: error,
     });
   }
 

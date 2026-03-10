@@ -15,6 +15,7 @@ export interface OsintSearchParams {
   target: string;
   type: OsintSearchType;
   sources?: string[];
+  urls?: string[];
 }
 
 export interface OsintResult {
@@ -39,8 +40,7 @@ export interface OsintConfig extends ISkillConfig {
 }
 
 export interface IOSINTSkill
-  extends ISkill,
-    ISkillExecutor<OsintSearchParams, OsintResult> {
+  extends ISkill, ISkillExecutor<OsintSearchParams, OsintResult> {
   search(params: OsintSearchParams): Promise<OsintResult>;
   analyzeRisk(profile: {
     name?: string;

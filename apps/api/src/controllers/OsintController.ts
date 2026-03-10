@@ -35,7 +35,7 @@ export class OsintController {
       query: string;
       source?: string;
     },
-  ): Promise<OsintSearch> {
+  ): Promise<any> {
     const osintSearch = await this.osintService.createSearch(body as any);
     const resultat = await this.osintExecutorService.executeSearch(osintSearch.id);
     return resultat;
