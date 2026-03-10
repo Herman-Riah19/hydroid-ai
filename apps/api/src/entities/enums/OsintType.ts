@@ -1,0 +1,11 @@
+export enum OsintType {
+  PERSON = "PERSON",
+  BUILDING = "BUILDING",
+  OBJECT = "OBJECT",
+  VEHICLE = "VEHICLE",
+  LOCATION = "LOCATION",
+  EMAIL = "EMAIL",
+  PHONE = "PHONE",
+  DOMAIN = "DOMAIN",
+  IMAGE = "IMAGE",
+}

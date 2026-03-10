@@ -1,0 +1,5 @@
+export enum ModelStatus {
+  AVAILABLE = "AVAILABLE",
+  FINE_TUNING = "FINE_TUNING",
+  UNAVAILABLE = "UNAVAILABLE",
+}

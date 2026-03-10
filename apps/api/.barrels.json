@@ -1,0 +1,16 @@
+{
+  "directory": [
+    "./src/controllers",
+    "./src/services",
+    "./src/repositories",
+    "./src/entities"
+  ],
+  "exclude": [
+    "**/__mock__",
+    "**/__mocks__",
+    "**/*.spec.ts",
+    "**/index.ts",
+    "**/SkillFactory.ts"
+  ],
+  "delete": true
+}
