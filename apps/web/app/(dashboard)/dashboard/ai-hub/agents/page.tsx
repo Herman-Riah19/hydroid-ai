@@ -117,11 +117,11 @@ export default function AgentsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Agents IA</h1>
-          <p className="text-gray-600">Gérez vos agents autonomes</p>
+          <h1 className="text-3xl font-bold text-gray-100">Agents IA</h1>
+          <p className="text-gray-500">Gérez vos agents autonomes</p>
         </div>
         <Link href="/dashboard/ai-hub/agents/new">
-          <Button>
+          <Button className="bg-gray-700 hover:bg-gray-600">
             <Plus className="mr-2 h-4 w-4" />
             Nouvel Agent
           </Button>
@@ -129,21 +129,38 @@ export default function AgentsPage() {
       </div>
 
       <Tabs defaultValue="ALL" onValueChange={setFilter}>
-        <TabsList>
-          <TabsTrigger value="ALL">Tous</TabsTrigger>
-          <TabsTrigger value="ACTIVE">Actifs</TabsTrigger>
-          <TabsTrigger value="INACTIVE">Inactifs</TabsTrigger>
-          <TabsTrigger value="RUNNING">En cours</TabsTrigger>
+        <TabsList className="bg-gray-800">
+          <TabsTrigger value="ALL" className="data-[state=active]:bg-gray-700">
+            Tous
+          </TabsTrigger>
+          <TabsTrigger
+            value="ACTIVE"
+            className="data-[state=active]:bg-gray-700"
+          >
+            Actifs
+          </TabsTrigger>
+          <TabsTrigger
+            value="INACTIVE"
+            className="data-[state=active]:bg-gray-700"
+          >
+            Inactifs
+          </TabsTrigger>
+          <TabsTrigger
+            value="RUNNING"
+            className="data-[state=active]:bg-gray-700"
+          >
+            En cours
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={filter} className="mt-6">
           {filteredAgents.length === 0 ? (
-            <Card>
+            <Card className="bg-gray-900 border-gray-800">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <Bot className="h-12 w-12 text-gray-400 mb-4" />
+                <Bot className="h-12 w-12 text-gray-500 mb-4" />
                 <p className="text-gray-500 mb-4">Aucun agent trouvé</p>
                 <Link href="/dashboard/ai-hub/agents/new">
-                  <Button variant="outline">
+                  <Button variant="outline" className="border-gray-700">
                     <Plus className="mr-2 h-4 w-4" />
                     Créer votre premier agent
                   </Button>
@@ -155,19 +172,19 @@ export default function AgentsPage() {
               {filteredAgents.map((agent: any) => (
                 <Card
                   key={agent.id}
-                  className="hover:shadow-lg transition-shadow"
+                  className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-blue-500/10">
-                          <Bot className="h-5 w-5 text-blue-500" />
+                        <div className="p-2 rounded-lg bg-gray-800">
+                          <Bot className="h-5 w-5 text-gray-400" />
                         </div>
                         <div>
-                          <CardTitle className="text-lg">
+                          <CardTitle className="text-lg text-gray-100">
                             {agent.name}
                           </CardTitle>
-                          <CardDescription>
+                          <CardDescription className="text-gray-500">
                             {agentTypeLabels[agent.agentType] ||
                               agent.agentType}
                           </CardDescription>
@@ -181,7 +198,7 @@ export default function AgentsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    <p className="text-sm text-gray-500 mb-4 line-clamp-2">
                       {agent.description || "Aucune description"}
                     </p>
                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
@@ -195,6 +212,7 @@ export default function AgentsPage() {
                         <Button
                           variant="outline"
                           size="sm"
+                          className="border-gray-700"
                           onClick={() => handleDeactivate(agent.id)}
                         >
                           <Pause className="h-4 w-4" />
@@ -203,20 +221,25 @@ export default function AgentsPage() {
                         <Button
                           variant="outline"
                           size="sm"
+                          className="border-gray-700"
                           onClick={() => handleActivate(agent.id)}
                         >
                           <Play className="h-4 w-4" />
                         </Button>
                       )}
                       <Link href={`/dashboard/ai-hub/agents/${agent.id}`}>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-700"
+                        >
                           <Settings className="h-4 w-4" />
                         </Button>
                       </Link>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-red-500 hover:text-red-600"
+                        className="border-gray-700 hover:text-red-400"
                         onClick={() => handleDelete(agent.id)}
                       >
                         <Trash2 className="h-4 w-4" />

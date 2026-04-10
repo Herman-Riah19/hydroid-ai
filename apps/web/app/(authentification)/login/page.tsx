@@ -59,11 +59,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
         <CardHeader>
-          <CardTitle>Connexion</CardTitle>
-          <CardDescription>Connectez-vous à votre compte</CardDescription>
+          <CardTitle className="text-gray-100">Connexion</CardTitle>
+          <CardDescription className="text-gray-400">
+            Connectez-vous à votre compte
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...formData}>
@@ -85,16 +87,20 @@ export default function LoginPage() {
                 type="password"
                 {...formData.register("password")}
               />
-              {error && <div className="text-red-500 text-sm">{error}</div>}
-              <Button type="submit" className="w-full" disabled={loading}>
+              {error && <div className="text-gray-400 text-sm">{error}</div>}
+              <Button
+                type="submit"
+                className="w-full bg-gray-100 text-black hover:bg-gray-200"
+                disabled={loading}
+              >
                 {loading ? <Loader className="animate-spin" /> : "Se connecter"}
               </Button>
             </form>
           </Form>
           <div className="mt-4 text-center">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               Pas de compte?{" "}
-              <a href="/register" className="text-blue-600 hover:underline">
+              <a href="/register" className="text-gray-300 hover:underline">
                 S'inscrire
               </a>
             </span>

@@ -16,17 +16,10 @@ Hydroid AI is a monorepo containing:
 ### Root Commands (Turbo)
 
 ```bash
-# Build all apps
-bun run build
-
-# Run all apps in development mode
-bun run dev
-
-# Lint all apps
-bun run lint
-
-# Format code (Prettier)
-bun run format
+bun run build     # Build all apps
+bun run dev       # Run all apps in development
+bun run lint      # Lint all apps
+bun run format    # Format code with Prettier
 ```
 
 ### Individual App Commands
@@ -35,59 +28,60 @@ bun run format
 
 ```bash
 cd apps/api
-bun run dev          # Development with watch mode
-bun run build        # Build to dist/index.js
-bun run barrels      # Generate barrel imports
-bun run prisma:migrate  # Run Prisma migrations
-bun run prisma:generate # Generate Prisma client
-bun run start:prod   # Production start
+bun run dev              # Development with watch mode
+bun run build            # Build to dist/index.js
+bun run barrels          # Generate barrel imports
+bun run prisma:migrate   # Run Prisma migrations
+bun run prisma:generate  # Generate Prisma client
+bun run start:prod       # Production start
 ```
 
 #### Web (apps/web)
 
 ```bash
 cd apps/web
-bun run dev          # Next.js dev with Turbopack
-bun run build       # Next.js production build
-bun run start       # Start production server
-bun run lint        # ESLint
+bun run dev     # Next.js dev with Turbopack
+bun run build   # Next.js production build
+bun run start   # Start production server
 ```
 
 ### Running a Single Test
 
-This project currently has no test suite. To add tests, use:
+This project currently has no test suite. To add tests:
 
 ```bash
-# For API - install vitest or jest
+# Install vitest
 bun add -D vitest
+
+# Run all tests
 bun vitest run
 
-# For Web - Next.js uses jest or vitest
+# Run specific test file
+bun vitest run src/services/userService.test.ts
+
+# Run tests in watch mode
+bun vitest
 ```
 
 ## Code Style Guidelines
 
 ### TypeScript Configuration
 
-The project uses strict TypeScript with these settings (from `packages/typescript-config/base.json`):
+Strict TypeScript settings from `packages/typescript-config/base.json`:
 
-- `strict: true`
-- `noUncheckedIndexedAccess: true`
-- `experimentalDecorators: true` (for Ts.ED)
-- `emitDecoratorMetadata: true` (for Ts.ED)
-- `moduleResolution: NodeNext`
-- `module: NodeNext`
+- `strict: true`, `noUncheckedIndexedAccess: true`
+- `experimentalDecorators: true`, `emitDecoratorMetadata: true` (for Ts.ED)
+- `moduleResolution: NodeNext`, `module: NodeNext`
 
 ### Imports
 
-**ESM with `.js` extensions:**
+**ESM with `.js` extension for local files:**
 
 ```typescript
-// Local imports must include .js extension
 import { User } from "../entities/User.js";
-import { UsersRepository } from "../repositories/UsersRepository.js";
+import { UserRepository } from "../repositories/UsersRepository.js";
 
-// External imports - no extension needed
+# External imports - no extension needed
 import { Controller, Inject } from "@tsed/di";
 import { Column, Entity } from "typeorm";
 ```
@@ -95,24 +89,24 @@ import { Column, Entity } from "typeorm";
 **Path aliases:**
 
 ```typescript
-// Use relative paths within apps
+# Within apps, use relative paths
 import { UserCreateDto } from "src/validators/UserDto";
 
-// Web app can use @repo/ui for shared components
+# Web app can use @repo/ui
 import { Button, Card } from "@repo/ui/components/ui/button";
 ```
 
 ### Naming Conventions
 
-| Element    | Convention       | Example                                 |
-| ---------- | ---------------- | --------------------------------------- |
-| Files      | kebab-case       | `user-service.ts`, `user-controller.ts` |
-| Classes    | PascalCase       | `UserService`, `AIAgentController`      |
-| Interfaces | PascalCase       | `UserDto`, `WeaponDto`                  |
-| Enums      | PascalCase       | `Role`, `AgentStatus`                   |
-| Methods    | camelCase        | `findByEmail()`, `register()`           |
-| Variables  | camelCase        | `existUser`, `isPasswordValid`          |
-| Constants  | UPPER_SNAKE_CASE | `USER_REPOSITORY`, `JWT_SECRET`         |
+| Element    | Convention       | Example               |
+| ---------- | ---------------- | --------------------- |
+| Files      | kebab-case       | `user-service.ts`     |
+| Classes    | PascalCase       | `UserService`         |
+| Interfaces | PascalCase       | `UserDto`             |
+| Enums      | PascalCase       | `Role`, `AgentStatus` |
+| Methods    | camelCase        | `findByEmail()`       |
+| Variables  | camelCase        | `existUser`           |
+| Constants  | UPPER_SNAKE_CASE | `USER_REPOSITORY`     |
 
 ### Entity Pattern (TypeORM + Ts.ED)
 
@@ -128,26 +122,11 @@ import { Property, Required } from "@tsed/schema";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  @Property()
-  id!: string;
-
-  @Column({ unique: true })
-  @Required()
-  @Property()
-  email!: string;
-
-  @Column({ nullable: true })
-  @Property()
-  name?: string;
-
-  @CreateDateColumn()
-  @Property()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  @Property()
-  updatedAt!: Date;
+  @PrimaryGeneratedColumn("uuid") @Property() id!: string;
+  @Column({ unique: true }) @Required() @Property() email!: string;
+  @Column({ nullable: true }) @Property() name?: string;
+  @CreateDateColumn() @Property() createdAt!: Date;
+  @UpdateDateColumn() @Property() updatedAt!: Date;
 }
 ```
 
@@ -155,11 +134,8 @@ export class User {
 
 ```typescript
 import { Injectable } from "@tsed/di";
-import { DataSource, FindOneOptions } from "typeorm";
 import { AppDataSource } from "../datasources/AppDataSource.js";
 import { User } from "../entities/User.js";
-
-export const USER_REPOSITORY = Symbol.for("UserRepository");
 
 export const UserRepository = AppDataSource.getRepository(User).extend({
   findByEmail(email: string) {
@@ -172,11 +148,9 @@ export class UsersRepository {
   get repository() {
     return UserRepository;
   }
-
   async findAll(): Promise<User[]> {
     return this.repository.find();
   }
-
   async create(user: Partial<User>): Promise<User> {
     return this.repository.save(this.repository.create(user));
   }
@@ -189,8 +163,6 @@ export class UsersRepository {
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
 import { Get, Post, Returns, Summary } from "@tsed/schema";
-import { User } from "../entities/User.js";
-import { UserCreateDto } from "src/validators/UserDto";
 import { UserService } from "src/services/UserService";
 
 @Controller("/users")
@@ -203,13 +175,6 @@ export class UserController {
   async signupUser(@BodyParams() user: UserCreateDto): Promise<User> {
     return this.service.register(user);
   }
-
-  @Get("/")
-  @Summary("Get all users")
-  @(Returns(200, Array).Of(User))
-  getAll() {
-    return this.service.findAll();
-  }
 }
 ```
 
@@ -219,7 +184,6 @@ export class UserController {
 import { Injectable } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
 import { UsersRepository } from "../repositories/UsersRepository.js";
-import { User } from "../entities/User.js";
 
 @Injectable()
 export class UserService extends UsersRepository {
@@ -229,9 +193,7 @@ export class UserService extends UsersRepository {
     password?: string;
   }): Promise<User> {
     const existUser = await this.findByEmail(data.email);
-    if (existUser) {
-      throw new BadRequest("User already exists");
-    }
+    if (existUser) throw new BadRequest("User already exists");
     return this.create(data);
   }
 }
@@ -239,61 +201,41 @@ export class UserService extends UsersRepository {
 
 ### Error Handling
 
-- Use `@tsed/exceptions` for HTTP errors
-- Throw `BadRequest`, `NotFound`, `Unauthorized`, `Forbidden`
+- Use `@tsed/exceptions` for HTTP errors: `BadRequest`, `NotFound`, `Unauthorized`, `Forbidden`
 - Return meaningful error messages
+- Use Zod for frontend validation
 
 ```typescript
 import { BadRequest } from "@tsed/exceptions";
-
 throw new BadRequest("User already exists");
 ```
 
 ### DTO/Validation Pattern
 
 ```typescript
-import { Property } from "@tsed/schema";
-import { Email, MinLength, Required } from "@tsed/schema";
+import { Property, Required, Email, MinLength } from "@tsed/schema";
 
 export class UserCreateDto {
-  @Required()
-  @Email()
-  @Property()
-  email!: string;
-
-  @Required()
-  @MinLength(6)
-  @Property()
-  password!: string;
-
-  @Property()
-  name?: string;
+  @Required() @Email() @Property() email!: string;
+  @Required() @MinLength(6) @Property() password!: string;
+  @Property() name?: string;
 }
 ```
 
 ### React/Next.js Patterns
 
-**Client Components:**
+**Client Components:** Add `"use client"` at the top
+
+**Server Components:** Default, no directive needed
 
 ```typescript
 "use client";
-
 import { Button } from "@repo/ui/components/ui/button";
 import { useState } from "react";
 
 export default function Page() {
   const [state, setState] = useState(false);
-  return <Button onClick={() => setState(!state)}>Click me</Button>;
-}
-```
-
-**Server Components (default):**
-
-```typescript
-import { Button } from "@repo/ui/components/ui/button";
-
-export default function Page() {
-  return <Button>Server rendered</Button>;
+  return <Button onClick={() => setState(!state)}>Click</Button>;
 }
 ```
 
@@ -301,7 +243,11 @@ export default function Page() {
 
 - Use Tailwind CSS via `@repo/ui`
 - Use `clsx` and `tailwind-merge` for conditional classes
-- Follow existing color patterns (cyan, violet gradients)
+- **Current Theme: Dark monochrome (no colors)** - Use gray scale only
+- Backgrounds: `bg-black`, `bg-gray-900`, `bg-gray-950`
+- Text: `text-gray-100`, `text-gray-400`, `text-gray-500`
+- Buttons: `bg-gray-700`, `bg-gray-100` (inverted for contrast)
+- Borders: `border-gray-800`, `border-gray-700`
 
 ```typescript
 import { clsx } from "clsx";
@@ -312,107 +258,60 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 ```
 
-### ESLint Configuration
+### Dashboard Sidebar Structure
 
-The project uses:
-
-- `@vercel/style-guide` for Next.js
-- `eslint-config-prettier` for formatting
-- `eslint-config-turbo` for monorepo
-- `@typescript-eslint` for TypeScript
-
-### Prettier Configuration
-
-Run formatting before committing:
-
-```bash
-bun run format
+```
+Sidebar Navigation (apps/web/components/layout/dashboard-sidebar.tsx):
+- Tableau de bord (/dashboard)
+- OSINT (/dashboard/osint)
+- Scraping (/dashboard/scraping)
+- AI Hub (with submenu: Agents, Fine-Tuning)
+- Configuration
+- Modèles IA
 ```
 
 ### Architecture Summary
 
 ```
 apps/api/src/
-├── controllers/    # Route handlers
-├── services/       # Business logic
+├── controllers/   # Route handlers
+├── services/      # Business logic
 ├── repositories/  # Data access
-├── entities/       # TypeORM models
-├── validators/     # DTOs
-├── middlewares/    # Express middleware
-├── interceptors/  # Request/response interceptors
-├── decorators/     # Custom decorators
-├── config/         # Configuration
-└── datasources/    # Database connection
+├── entities/      # TypeORM models
+├── validators/   # DTOs
+├── tools/         # Skills (LLM, Scrapping, OSINT)
+└── datasources/   # Database connection
 
 apps/web/app/
-├── (authentification)/  # Login, register pages
-├── (dashboard)/         # Protected dashboard routes
-├── posts/               # Blog posts
-└── layout.tsx          # Root layout
+├── (authentification)/  # Login, register
+├── (dashboard)/          # Protected routes
+│   ├── dashboard/        # Main dashboard
+│   ├── osint/            # OSINT search
+│   ├── scraping/         # Web scraping
+│   └── ai-hub/           # AI agents
+└── layout.tsx
 ```
 
-### Skills Package (@hydroid/skills)
+### Skills / Tools (API)
 
-The skills package provides specialized AI capabilities using SOLID principles:
+The API uses skills for AI operations:
 
 ```typescript
-// Import skills
-import {
-  ScrappingSkill,
-  OsintSkill,
-  LLMSkill
-} from "@hydroid/skills";
-
-// LLM Skill
+// LLM Skill (supports ollama or lmstudio)
 const llm = new LLMSkill({
-        provider: "ollama",
-        model: llmConfig.model ?? "qwen2.5:14b",
-        enabled: true,
-        ...llmConfig,
-      });
-const response = await llm.generate("Hello");
+  provider: "lmstudio",
+  model: "qwen/qwen3-8b",
+  baseUrl: "http://localhost:1234/v1",
+});
+await llm.generate("prompt");
 
 // Scraping Skill
-const scraper = new ScrappingSkill()
+const scraper = new ScrapingSkill({ enabled: true, timeout: 30000 });
 const data = await scraper.scrape({ url: "https://example.com" });
 
-// OSINT Skill (depends on ScrapingSkill)
-const osint = new OsintSkill(
-    scraper || new ScrapingSkill({ enabled: true })
-  );
-
+// OSINT Skill (uses ScrapingSkill internally)
+const osint = new OsintSkill(scraper, { enabled: true });
 const result = await osint.search({ target: "John Doe", type: "person" });
-```
-
-### Key Dependencies
-
-| Package      | Version | Purpose                 |
-| ------------ | ------- | ----------------------- |
-| Bun          | 1.1.21  | Package manager/runtime |
-| Ts.ED        | 8.x     | Backend framework       |
-| TypeORM      | 0.3.x   | Database ORM            |
-| Next.js      | 15.x    | Frontend framework      |
-| React        | 19.x    | UI library              |
-| Zod          | 4.x     | Validation              |
-| Zustand      | 4.x     | State management        |
-| Tailwind CSS | 4.x     | Styling                 |
-
-### UI Components
-
-The `@repo/ui` package includes reusable components in `src/components/`:
-
-- **card/**: FeatureCard, StatCard, StepCard, ModelCard, SearchResultCard, ActionCard
-- **composable/Sections.tsx**: FeatureSection, StatSection, StepsSection, ActionGrid
-- **ui/**: Standard shadcn/ui components (Button, Card, Badge, etc.)
-
-```typescript
-// Using reusable sections
-import { FeatureSection, StatSection, ActionGrid } from "@repo/ui/components/composable/Sections";
-
-<FeatureSection
-  title="Features"
-  features={[{ icon: Search, title: "OSINT", description: "...", color: "from-cyan-500 to-blue-500" }]}
-/>
 ```
 
 ### Best Practices
@@ -420,10 +319,10 @@ import { FeatureSection, StatSection, ActionGrid } from "@repo/ui/components/com
 1. Always use TypeScript strict mode
 2. Import local files with `.js` extension
 3. Use repository pattern for data access
-4. Use services for business logic
-5. Use controllers only for routing
-6. Handle errors with proper HTTP exceptions
-7. Run `bun run format` before commits
-8. Run `bun run lint` to check for issues
-9. Use `@tsed/schema` decorators for validation
-10. Follow existing file organization patterns
+4. Use services for business logic, controllers only for routing
+5. Handle errors with proper HTTP exceptions
+6. Run `bun run format` before commits
+7. Run `bun run lint` to check for issues
+8. Use `@tsed/schema` decorators for validation
+9. Follow dark monochrome theme (no colored gradients)
+10. Keep UI minimal - avoid unnecessary cards and decorations

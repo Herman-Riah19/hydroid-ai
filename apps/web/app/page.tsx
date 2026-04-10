@@ -39,27 +39,23 @@ export default function HomePage() {
       title: "OSINT Avancé",
       description:
         "Recherche approfondie de personas, emails, domaines et localisation",
-      color: "from-cyan-500 to-blue-500",
     },
     {
       icon: Globe,
       title: "Web Scraping",
       description:
         "Collecte automatique de données depuis n'importe quelle source web",
-      color: "from-emerald-500 to-teal-500",
     },
     {
       icon: Brain,
       title: "Analyse IA",
       description:
         "Traitement intelligent avec Qwen, Llama et vos modèles personnalisés",
-      color: "from-violet-500 to-purple-500",
     },
     {
       icon: ImageIcon,
       title: "Génération d'Images",
       description: "Création de visuels IA pour vos rapports et présentations",
-      color: "from-rose-500 to-pink-500",
     },
   ];
 
@@ -91,21 +87,18 @@ export default function HomePage() {
       description: "Créez et gérez vos agents intelligents",
       icon: Bot,
       href: "/dashboard/ai-hub/agents",
-      color: "from-violet-500 to-purple-500",
     },
     {
       title: "OSINT",
       description: "Recherche d'intelligence open source",
       icon: FileSearch,
       href: "/dashboard/ai-hub/osint",
-      color: "from-cyan-500 to-blue-500",
     },
     {
       title: "Fine-Tuning",
       description: "Entraînez vos propres modèles",
       icon: Wand2,
       href: "/dashboard/ai-hub/fine-tuning",
-      color: "from-rose-500 to-pink-500",
     },
   ];
 
@@ -143,32 +136,32 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-gray-100">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center">
-              <Shield className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+              <Shield className="h-5 w-5 text-black" />
             </div>
             <span className="text-xl font-bold">Hydroid AI</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <a
               href="#features"
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-gray-100 transition-colors"
             >
               Fonctionnalités
             </a>
             <a
               href="#how-it-works"
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-gray-100 transition-colors"
             >
               Comment ça marche
             </a>
             <a
               href="#pricing"
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-gray-100 transition-colors"
             >
               Tarifs
             </a>
@@ -177,13 +170,13 @@ export default function HomePage() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-gray-100"
               >
                 Connexion
               </Button>
             </Link>
             <Link href="/register">
-              <Button className="bg-gradient-to-r from-cyan-500 to-violet-500 hover:opacity-90">
+              <Button className="bg-gray-100 text-black hover:bg-gray-200">
                 Commencer
               </Button>
             </Link>
@@ -193,25 +186,23 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 via-black to-violet-900/20" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gray-900" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gray-800/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gray-800/30 rounded-full blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <Badge
               variant="outline"
-              className="mb-6 border-cyan-500/50 text-cyan-400"
+              className="mb-6 border-gray-700 text-gray-400"
             >
               <Zap className="h-3 w-3 mr-1" />
               Nouvelle Génération d'IA
             </Badge>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-gray-100">
               Intelligence &<br />
-              <span className="bg-gradient-to-r from-cyan-400 via-violet-400 to-rose-400 bg-clip-text text-transparent">
-                Analyse Avancée
-              </span>
+              <span className="text-gray-400">Analyse Avancée</span>
             </h1>
 
             <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
@@ -223,7 +214,7 @@ export default function HomePage() {
               <Link href="/register">
                 <Button
                   size="lg"
-                  className="h-14 px-8 bg-gradient-to-r from-cyan-500 to-violet-500 hover:opacity-90 text-lg"
+                  className="h-14 px-8 bg-gray-100 text-black hover:bg-gray-200 text-lg"
                 >
                   <Play className="h-5 w-5 mr-2" />
                   Commencer Gratuitement
@@ -242,27 +233,27 @@ export default function HomePage() {
 
             {/* Terminal Preview */}
             <div className="mt-16 mx-auto max-w-3xl">
-              <div className="rounded-xl border border-gray-800 bg-gray-900/80 backdrop-blur overflow-hidden">
+              <div className="rounded-xl border border-gray-800 bg-gray-950 overflow-hidden">
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="ml-4 text-sm text-gray-400">
+                  <span className="ml-4 text-sm text-gray-500">
                     hydroid-cli
                   </span>
                 </div>
                 <div className="p-4 font-mono text-sm">
-                  <div className="text-cyan-400">
+                  <div className="text-gray-300">
                     $ hydroid osint search "John Doe"
                   </div>
-                  <div className="text-gray-500 mt-2">
+                  <div className="text-gray-600 mt-2">
                     [+] Recherche en cours...
                   </div>
-                  <div className="text-gray-500">
+                  <div className="text-gray-600">
                     [+] Sources: Google, LinkedIn, Twitter
                   </div>
-                  <div className="text-green-400">[✓] 3 profils trouvés</div>
-                  <div className="text-gray-500 mt-1">
+                  <div className="text-gray-400">[✓] 3 profils trouvés</div>
+                  <div className="text-gray-600 mt-1">
                     [+] Score de risque: 23%
                   </div>
                 </div>
@@ -273,7 +264,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 border-y border-gray-800 bg-gray-900/30">
+      <section className="py-16 border-y border-gray-800 bg-gray-950">
         <div className="max-w-7xl mx-auto px-6">
           <StatSection stats={stats} />
         </div>
@@ -291,7 +282,7 @@ export default function HomePage() {
       </section>
 
       {/* How it Works */}
-      <section id="how-it-works" className="py-20 bg-gray-900/30">
+      <section id="how-it-works" className="py-20 bg-gray-950">
         <div className="max-w-7xl mx-auto px-6">
           <StepsSection
             title="Comment ça marche"
@@ -314,24 +305,24 @@ export default function HomePage() {
                 personnalisés. Qwen, Llama, Mistral - le choix vous appartient.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-                  <div className="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                    <Terminal className="h-6 w-6 text-orange-400" />
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900 border border-gray-800">
+                  <div className="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center">
+                    <Terminal className="h-6 w-6 text-gray-300" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white">Ollama</h4>
-                    <p className="text-sm text-gray-400">
+                    <h4 className="font-semibold text-gray-100">Ollama</h4>
+                    <p className="text-sm text-gray-500">
                       Modèles locaux performants
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-                  <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                    <Cpu className="h-6 w-6 text-blue-400" />
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900 border border-gray-800">
+                  <div className="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center">
+                    <Cpu className="h-6 w-6 text-gray-300" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white">LM Studio</h4>
-                    <p className="text-sm text-gray-400">
+                    <h4 className="font-semibold text-gray-100">LM Studio</h4>
+                    <p className="text-sm text-gray-500">
                       Interface de gestion de modèles
                     </p>
                   </div>
@@ -339,10 +330,10 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-violet-500 rounded-2xl blur-2xl opacity-30" />
+              <div className="absolute inset-0 bg-gray-800 rounded-2xl blur-2xl opacity-50" />
               <div className="relative p-8 rounded-2xl bg-gray-900 border border-gray-800">
                 <div className="flex items-center gap-3 mb-6">
-                  <Layers className="h-6 w-6 text-cyan-400" />
+                  <Layers className="h-6 w-6 text-gray-300" />
                   <span className="font-semibold">Modèles Disponibles</span>
                 </div>
                 <div className="space-y-3">
@@ -354,7 +345,7 @@ export default function HomePage() {
                   ].map((model, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
+                      className="flex items-center justify-between p-3 rounded-lg bg-gray-800"
                     >
                       <span className="font-mono text-sm">{model}</span>
                       <Badge variant="outline" className="text-xs">
@@ -381,7 +372,7 @@ export default function HomePage() {
       </section>
 
       {/* OSINT Actions */}
-      <section className="py-20 bg-gray-900/30">
+      <section className="py-20 bg-gray-950">
         <div className="max-w-7xl mx-auto px-6">
           <ActionGrid
             title="Actions OSINT"
@@ -392,7 +383,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-cyan-900/20 via-black to-violet-900/20">
+      <section className="py-20 bg-gray-900">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Prêt à commencer ?</h2>
           <p className="text-xl text-gray-400 mb-8">
@@ -402,7 +393,7 @@ export default function HomePage() {
           <Link href="/register">
             <Button
               size="lg"
-              className="h-14 px-12 bg-gradient-to-r from-cyan-500 to-violet-500 hover:opacity-90 text-lg"
+              className="h-14 px-12 bg-gray-100 text-black hover:bg-gray-200 text-lg"
             >
               Créer un Compte Gratuit
               <ChevronRight className="ml-2 h-5 w-5" />
@@ -416,12 +407,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center">
-                <Shield className="h-4 w-4 text-white" />
+              <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                <Shield className="h-4 w-4 text-black" />
               </div>
               <span className="font-bold">Hydroid AI</span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-500 text-sm">
               © 2024 Hydroid AI. Tous droits réservés.
             </p>
           </div>

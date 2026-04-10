@@ -16,7 +16,6 @@ export function FeatureCard({
   icon: Icon,
   title,
   description,
-  color = "from-cyan-500 to-blue-500",
   className,
   onClick,
 }: FeatureCardProps) {
@@ -26,7 +25,7 @@ export function FeatureCard({
     <Wrapper
       onClick={onClick}
       className={cn(
-        "bg-gray-900/50 border border-gray-800 hover:border-gray-700 transition-all group text-left w-full",
+        "bg-gray-900 border border-gray-800 hover:border-gray-700 hover:bg-gray-850 transition-all group text-left w-full",
         onClick && "cursor-pointer hover:scale-[1.02]",
         className,
       )}
@@ -34,13 +33,12 @@ export function FeatureCard({
       <div className="p-6">
         <div
           className={cn(
-            "w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
-            color,
+            "w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
           )}
         >
-          <Icon className="h-7 w-7 text-white" />
+          <Icon className="h-7 w-7 text-gray-300" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold text-gray-100 mb-2">{title}</h3>
         <p className="text-gray-400">{description}</p>
       </div>
     </Wrapper>
@@ -62,9 +60,9 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div className={cn("text-center", className)}>
-      <Icon className="h-8 w-8 mx-auto text-cyan-400 mb-3" />
-      <div className="text-3xl font-bold text-white mb-1">{value}</div>
-      <div className="text-sm text-gray-400">{label}</div>
+      <Icon className="h-8 w-8 mx-auto text-gray-400 mb-3" />
+      <div className="text-3xl font-bold text-gray-100 mb-1">{value}</div>
+      <div className="text-sm text-gray-500">{label}</div>
     </div>
   );
 }
@@ -84,9 +82,9 @@ export function StepCard({
 }: StepCardProps) {
   return (
     <div className="relative">
-      <div className="p-6 rounded-xl bg-gray-900/50 border border-gray-800 text-center">
+      <div className="p-6 rounded-xl bg-gray-900 border border-gray-800 text-center">
         <div className="text-5xl font-bold text-gray-700 mb-4">{number}</div>
-        <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold text-gray-100 mb-2">{title}</h3>
         <p className="text-gray-400">{description}</p>
       </div>
       {!isLast && (
@@ -203,22 +201,20 @@ export function ActionCard({
   description,
   icon: Icon,
   href,
-  color = "from-cyan-500 to-violet-500",
 }: ActionCardProps) {
   return (
     <a
       href={href}
-      className="block p-6 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-gray-700 hover:scale-[1.02] transition-all group"
+      className="block p-6 rounded-xl bg-gray-900 border border-gray-800 hover:border-gray-700 hover:bg-gray-850 hover:scale-[1.02] transition-all group"
     >
       <div
         className={cn(
-          "w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
-          color,
+          "w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
         )}
       >
-        <Icon className="h-6 w-6 text-white" />
+        <Icon className="h-6 w-6 text-gray-300" />
       </div>
-      <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-100 mb-1">{title}</h3>
       <p className="text-sm text-gray-400">{description}</p>
     </a>
   );

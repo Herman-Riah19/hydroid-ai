@@ -61,7 +61,9 @@ export function FeatureSection({
     <section className={className}>
       {(title || subtitle) && (
         <div className="text-center mb-16">
-          {title && <h2 className="text-4xl font-bold mb-4">{title}</h2>}
+          {title && (
+            <h2 className="text-4xl font-bold mb-4 text-gray-100">{title}</h2>
+          )}
           {subtitle && (
             <p className="text-gray-400 max-w-2xl mx-auto">{subtitle}</p>
           )}
@@ -98,7 +100,9 @@ export function StepsSection({
     <section className={className}>
       {(title || subtitle) && (
         <div className="text-center mb-16">
-          {title && <h2 className="text-4xl font-bold mb-4">{title}</h2>}
+          {title && (
+            <h2 className="text-4xl font-bold mb-4 text-gray-100">{title}</h2>
+          )}
           {subtitle && <p className="text-gray-400">{subtitle}</p>}
         </div>
       )}
@@ -131,7 +135,9 @@ export function ActionGrid({
     <section className={className}>
       {(title || subtitle) && (
         <div className="mb-8">
-          {title && <h2 className="text-3xl font-bold mb-2">{title}</h2>}
+          {title && (
+            <h2 className="text-3xl font-bold mb-2 text-gray-100">{title}</h2>
+          )}
           {subtitle && <p className="text-gray-400">{subtitle}</p>}
         </div>
       )}

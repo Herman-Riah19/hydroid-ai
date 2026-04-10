@@ -22,6 +22,7 @@ export class OsintSkill implements IOSINTSkill {
   ) {
     this.config = { defaultSources: ["google", "social"], ...config };
     this.scrapingSkill = scrapingSkill;
+    this.logger = new Logger("OsintSkill");
   }
 
   async initialize(): Promise<void> {
@@ -45,7 +46,7 @@ export class OsintSkill implements IOSINTSkill {
     const { target, type, sources = this.config.defaultSources ?? [] } = params;
 
     switch (type) {
-    case "person":
+      case "person":
         return this.searchPerson(target, sources ?? []);
       case "email":
         return this.searchEmail(target, sources ?? []);
@@ -79,11 +80,17 @@ export class OsintSkill implements IOSINTSkill {
       `"${name}" Instagram`,
     ];
 
+    let allContent = "";
+    let allUrls: string[] = [];
+
     for (const query of queries) {
       try {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
         const data = await this.scrapingSkill.scrape({ url: searchUrl });
-        this.logger.info("Les liens: " + data)
+
+        if (data.content) {
+          allContent += data.content + "\n";
+        }
 
         const emails = await this.scrapingSkill.extractEmails(
           data.content || "",
@@ -104,6 +111,7 @@ export class OsintSkill implements IOSINTSkill {
             url.includes("instagram.com"),
         );
 
+        allUrls.push(searchUrl);
         result.sources.push(searchUrl);
         result.confidence += 0.2;
       } catch (error) {

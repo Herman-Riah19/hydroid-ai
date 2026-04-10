@@ -34,7 +34,7 @@ export default function OsintPage() {
   const [target, setTarget] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<any>(null);
-  const {user, token} = useAuthStore((state) => {
+  const { user, token } = useAuthStore((state) => {
     return {
       user: state.user,
       token: state.token,
@@ -85,14 +85,16 @@ export default function OsintPage() {
 
     setIsSearching(true);
 
-    const response = await OsintServices.createSearch({
-      userId: user?.id || "",
-      query: target,
-      searchType: searchType,
-    },
-    token || "");
+    const response = await OsintServices.createSearch(
+      {
+        userId: user?.id || "",
+        query: target,
+        searchType: searchType,
+      },
+      token || "",
+    );
 
-    console.log("resultat: ", response)
+    console.log("resultat: ", response);
     // Simulate search - in production this would call the API
     setTimeout(() => {
       setResults({
@@ -100,7 +102,7 @@ export default function OsintPage() {
         type: searchType,
         confidence: response.confidence,
         findings: response.result.findings,
-        sources: response.result.sources
+        sources: response.result.sources,
       });
       setIsSearching(false);
     }, 2000);
@@ -111,8 +113,8 @@ export default function OsintPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">OSINT</h1>
-          <p className="text-gray-400 mt-1">
+          <h1 className="text-3xl font-bold text-gray-100">OSINT</h1>
+          <p className="text-gray-500 mt-1">
             Recherche d'intelligence open source
           </p>
         </div>
@@ -132,8 +134,8 @@ export default function OsintPage() {
               onClick={() => setSearchType(type.id)}
               className={`p-4 rounded-xl border transition-all ${
                 searchType === type.id
-                  ? "bg-cyan-900/50 border-cyan-500 text-cyan-400"
-                  : "bg-gray-900/30 border-gray-800 text-gray-400 hover:border-gray-700"
+                  ? "bg-gray-800 border-gray-500 text-gray-100"
+                  : "bg-gray-900 border-gray-800 text-gray-500 hover:border-gray-700"
               }`}
             >
               <Icon className="h-5 w-5 mx-auto mb-2" />
@@ -144,20 +146,20 @@ export default function OsintPage() {
       </div>
 
       {/* Search Input */}
-      <Card className="bg-gray-900/50 border-gray-800">
+      <Card className="bg-gray-900 border-gray-800">
         <CardContent className="p-6">
           <div className="flex gap-3">
             <Input
               placeholder={`Entrez ${searchTypes.find((t) => t.id === searchType)?.description.toLowerCase()}...`}
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white text-lg h-12"
+              className="bg-gray-800 border-gray-700 text-gray-100 text-lg h-12"
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <Button
               onClick={handleSearch}
               disabled={isSearching || !target}
-              className="bg-cyan-600 hover:bg-cyan-700 h-12 px-8"
+              className="bg-gray-700 hover:bg-gray-600 h-12 px-8"
             >
               {isSearching ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -176,23 +178,24 @@ export default function OsintPage() {
       {results && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Results */}
-          <Card className="lg:col-span-2 bg-gray-900/50 border-gray-800">
+          <Card className="lg:col-span-2 bg-gray-900 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Shield className="h-5 w-5 text-cyan-500" />
+              <CardTitle className="text-gray-100 flex items-center gap-2">
+                <Shield className="h-5 w-5 text-gray-400" />
                 Résultats de Recherche
               </CardTitle>
-              <CardDescription>Cible: {results.target}</CardDescription>
+              <CardDescription className="text-gray-500">
+                Cible: {results.target}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Risk Score */}
-              
 
               {/* Emails */}
               {results.findings.emails &&
                 results.findings.emails.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       Emails trouvés
                     </h4>
@@ -201,9 +204,9 @@ export default function OsintPage() {
                         (email: string, i: number) => (
                           <div
                             key={i}
-                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
+                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800"
                           >
-                            <span className="text-white">{email}</span>
+                            <span className="text-gray-100">{email}</span>
                             <Button variant="ghost" size="sm">
                               <Copy className="h-4 w-4" />
                             </Button>
@@ -218,7 +221,7 @@ export default function OsintPage() {
               {results.findings.phones &&
                 results.findings.phones.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Téléphones trouvés
                     </h4>
@@ -227,9 +230,9 @@ export default function OsintPage() {
                         (phone: string, i: number) => (
                           <div
                             key={i}
-                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
+                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800"
                           >
-                            <span className="text-white">{phone}</span>
+                            <span className="text-gray-100">{phone}</span>
                             <Button variant="ghost" size="sm">
                               <Copy className="h-4 w-4" />
                             </Button>
@@ -244,7 +247,7 @@ export default function OsintPage() {
               {results.findings.socialProfiles &&
                 results.findings.socialProfiles.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
                       <Globe className="h-4 w-4" />
                       Profils Sociaux
                     </h4>
@@ -253,9 +256,9 @@ export default function OsintPage() {
                         (profile: string, i: number) => (
                           <div
                             key={i}
-                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
+                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800"
                           >
-                            <span className="text-white">{profile}</span>
+                            <span className="text-gray-100">{profile}</span>
                             <Button variant="ghost" size="sm">
                               <ExternalLink className="h-4 w-4" />
                             </Button>
@@ -265,44 +268,41 @@ export default function OsintPage() {
                     </div>
                   </div>
                 )}
-              {results.sources &&
-                results.sources.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      Sources
-                    </h4>
-                    <div className="space-y-2">
-                      {results.sources.map(
-                        (profile: string, i: number) => (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50"
-                          >
-                            <span className="text-white">{profile}</span>
-                            <Button variant="ghost" size="sm">
-                              <ExternalLink className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ),
-                      )}
-                    </div>
+              {results.sources && results.sources.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
+                    <Globe className="h-4 w-4" />
+                    Sources
+                  </h4>
+                  <div className="space-y-2">
+                    {results.sources.map((profile: string, i: number) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-3 rounded-lg bg-gray-800"
+                      >
+                        <span className="text-gray-100">{profile}</span>
+                        <Button variant="ghost" size="sm">
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
           {/* Summary */}
-          <Card className="bg-gray-900/50 border-gray-800">
+          <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-white text-lg">Résumé</CardTitle>
+              <CardTitle className="text-gray-100 text-lg">Résumé</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="text-center p-6 rounded-lg bg-gray-800/50">
-                <div className="text-4xl font-bold text-cyan-400 mb-2">
+              <div className="text-center p-6 rounded-lg bg-gray-800">
+                <div className="text-4xl font-bold text-gray-300 mb-2">
                   {(results.confidence * 100).toFixed(0)}%
                 </div>
-                <p className="text-sm text-gray-400">Confiance</p>
+                <p className="text-sm text-gray-500">Confiance</p>
               </div>
 
               <Button variant="outline" className="w-full border-gray-700">

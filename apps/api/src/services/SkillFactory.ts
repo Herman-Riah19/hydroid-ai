@@ -1,17 +1,9 @@
 import { Injectable, OnInit } from "@tsed/di";
-import {
-  ScrapingSkill,
-  OsintSkill,
-  LLMSkill,
-  ImageGenerationSkill,
-  createOllamaLLM,
-  createLMStudioLLM,
-  createStableDiffusionSkill,
-  type IScrapingSkill,
-  type IOSINTSkill,
-  type ILLMSkill,
-  type IOSINTImageSkill,
-} from "@hydroid/skills";
+import { ImageGenerationSkill, createStableDiffusionSkill } from "src/tools/AIImageGenerator";
+import { LLMSkill, createLMStudioLLM, createOllamaLLM } from "src/tools/LLM";
+import { OsintSkill } from "src/tools/Osint";
+import { ScrapingSkill } from "src/tools/Scrapping";
+import { IScrapingSkill, IOSINTSkill, ILLMSkill, IOSINTImageSkill } from "src/types";
 
 export interface SkillFactoryConfig {
   scraping?: { enabled?: boolean; timeout?: number };

@@ -28,28 +28,24 @@ export default function DashboardPage() {
       name: "Recherches OSINT",
       value: "247",
       icon: Search,
-      color: "bg-cyan-500",
       change: "+12%",
     },
     {
       name: "Scrappings",
       value: "1,892",
       icon: Globe,
-      color: "bg-emerald-500",
       change: "+28%",
     },
     {
       name: "Analyses IA",
       value: "56",
       icon: Brain,
-      color: "bg-violet-500",
       change: "+8%",
     },
     {
       name: "Images générées",
       value: "134",
       icon: ImageIcon,
-      color: "bg-rose-500",
       change: "+45%",
     },
   ];
@@ -60,28 +56,24 @@ export default function DashboardPage() {
       description: "Lancez une recherche OSINT",
       href: "/dashboard/actions/osint",
       icon: Search,
-      color: "from-cyan-500 to-blue-500",
     },
     {
       name: "Web Scraping",
       description: "Collectez des données du web",
       href: "/dashboard/actions/scraping",
       icon: Globe,
-      color: "from-emerald-500 to-teal-500",
     },
     {
       name: "Analyse IA",
       description: "Analysez vos données",
       href: "/dashboard/actions/analyze",
       icon: Brain,
-      color: "from-violet-500 to-purple-500",
     },
     {
       name: "Génération Image",
       description: "Créez des visuels IA",
       href: "/dashboard/actions/image",
       icon: ImageIcon,
-      color: "from-rose-500 to-pink-500",
     },
   ];
 
@@ -123,10 +115,10 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-500 to-violet-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-gray-100">
             Hydroid Command Center
           </h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-gray-500 mt-1">
             Plateforme de renseignement et analyse intelligence
           </p>
         </div>
@@ -136,7 +128,7 @@ export default function DashboardPage() {
             Ollama Connecté
           </Badge>
           <Badge variant="outline" className="gap-1">
-            <span className="w-2 h-2 rounded-full bg-cyan-500"></span>
+            <span className="w-2 h-2 rounded-full bg-gray-500"></span>
             LM Studio Ready
           </Badge>
         </div>
@@ -147,21 +139,21 @@ export default function DashboardPage() {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.name} className="bg-gray-900/50 border-gray-800">
+            <Card key={stat.name} className="bg-gray-900 border-gray-800">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
-                  <div
-                    className={`p-2.5 rounded-xl bg-gradient-to-br ${stat.color} bg-opacity-20`}
-                  >
-                    <Icon className={`h-5 w-5 text-white`} />
+                  <div className="p-2.5 rounded-xl bg-gray-800">
+                    <Icon className="h-5 w-5 text-gray-300" />
                   </div>
-                  <span className="text-xs font-medium text-green-400">
+                  <span className="text-xs font-medium text-gray-400">
                     {stat.change}
                   </span>
                 </div>
                 <div className="mt-3">
-                  <p className="text-2xl font-bold text-white">{stat.value}</p>
-                  <p className="text-xs text-gray-400">{stat.name}</p>
+                  <p className="text-2xl font-bold text-gray-100">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-gray-500">{stat.name}</p>
                 </div>
               </CardContent>
             </Card>
@@ -175,17 +167,15 @@ export default function DashboardPage() {
           const Icon = action.icon;
           return (
             <Link key={action.name} href={action.href}>
-              <Card className="bg-gray-900/50 border-gray-800 hover:border-gray-700 transition-all cursor-pointer group">
+              <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all cursor-pointer group">
                 <CardContent className="p-5">
-                  <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                  >
-                    <Icon className="h-6 w-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Icon className="h-6 w-6 text-gray-300" />
                   </div>
-                  <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
+                  <h3 className="font-semibold text-gray-100 group-hover:text-gray-300 transition-colors">
                     {action.name}
                   </h3>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-500 mt-1">
                     {action.description}
                   </p>
                 </CardContent>
@@ -198,17 +188,17 @@ export default function DashboardPage() {
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <Card className="lg:col-span-2 bg-gray-900/50 border-gray-800">
+        <Card className="lg:col-span-2 bg-gray-900 border-gray-800">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg text-white flex items-center gap-2">
-                <Activity className="h-5 w-5 text-cyan-500" />
+              <CardTitle className="text-lg text-gray-100 flex items-center gap-2">
+                <Activity className="h-5 w-5 text-gray-400" />
                 Activité Récente
               </CardTitle>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white"
+                className="text-gray-500 hover:text-gray-100"
               >
                 Voir tout
               </Button>
@@ -219,23 +209,23 @@ export default function DashboardPage() {
               {recentActivity.map((activity, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg bg-gray-800 hover:bg-gray-750 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-2 h-2 rounded-full ${
                         activity.status === "completed"
-                          ? "bg-green-500"
+                          ? "bg-gray-400"
                           : activity.status === "running"
-                            ? "bg-yellow-500 animate-pulse"
-                            : "bg-gray-500"
+                            ? "bg-gray-500 animate-pulse"
+                            : "bg-gray-600"
                       }`}
                     />
                     <div>
-                      <p className="text-sm font-medium text-white">
+                      <p className="text-sm font-medium text-gray-100">
                         {activity.name}
                       </p>
-                      <p className="text-xs text-gray-400">{activity.time}</p>
+                      <p className="text-xs text-gray-500">{activity.time}</p>
                     </div>
                   </div>
                   <Badge variant="secondary" className="text-xs capitalize">
@@ -248,10 +238,10 @@ export default function DashboardPage() {
         </Card>
 
         {/* Active Agents */}
-        <Card className="bg-gray-900/50 border-gray-800">
+        <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg text-white flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-violet-500" />
+            <CardTitle className="text-lg text-gray-100 flex items-center gap-2">
+              <Cpu className="h-5 w-5 text-gray-400" />
               Agents IA
             </CardTitle>
           </CardHeader>
@@ -259,7 +249,7 @@ export default function DashboardPage() {
             {activeAgents.map((agent, i) => (
               <div key={i} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-gray-100">
                     {agent.name}
                   </span>
                   <Badge
@@ -273,7 +263,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Progress value={agent.cpu} className="flex-1 h-1.5" />
-                  <span className="text-xs text-gray-400">{agent.cpu}%</span>
+                  <span className="text-xs text-gray-500">{agent.cpu}%</span>
                 </div>
               </div>
             ))}
@@ -288,34 +278,34 @@ export default function DashboardPage() {
       </div>
 
       {/* System Status */}
-      <Card className="bg-gray-900/50 border-gray-800">
+      <Card className="bg-gray-900 border-gray-800">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-white flex items-center gap-2">
-            <Shield className="h-5 w-5 text-emerald-500" />
+          <CardTitle className="text-lg text-gray-100 flex items-center gap-2">
+            <Shield className="h-5 w-5 text-gray-400" />
             Status Système
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-lg bg-gray-800/50 text-center">
-              <Database className="h-5 w-5 mx-auto text-cyan-400 mb-2" />
-              <p className="text-lg font-bold text-white">14.2 GB</p>
-              <p className="text-xs text-gray-400">Données OSINT</p>
+            <div className="p-4 rounded-lg bg-gray-800 text-center">
+              <Database className="h-5 w-5 mx-auto text-gray-400 mb-2" />
+              <p className="text-lg font-bold text-gray-100">14.2 GB</p>
+              <p className="text-xs text-gray-500">Données OSINT</p>
             </div>
-            <div className="p-4 rounded-lg bg-gray-800/50 text-center">
-              <Zap className="h-5 w-5 mx-auto text-yellow-400 mb-2" />
-              <p className="text-lg font-bold text-white">3</p>
-              <p className="text-xs text-gray-400">Tâches actives</p>
+            <div className="p-4 rounded-lg bg-gray-800 text-center">
+              <Zap className="h-5 w-5 mx-auto text-gray-400 mb-2" />
+              <p className="text-lg font-bold text-gray-100">3</p>
+              <p className="text-xs text-gray-500">Tâches actives</p>
             </div>
-            <div className="p-4 rounded-lg bg-gray-800/50 text-center">
-              <Target className="h-5 w-5 mx-auto text-violet-400 mb-2" />
-              <p className="text-lg font-bold text-white">89%</p>
-              <p className="text-xs text-gray-400">Précision IA</p>
+            <div className="p-4 rounded-lg bg-gray-800 text-center">
+              <Target className="h-5 w-5 mx-auto text-gray-400 mb-2" />
+              <p className="text-lg font-bold text-gray-100">89%</p>
+              <p className="text-xs text-gray-500">Précision IA</p>
             </div>
-            <div className="p-4 rounded-lg bg-gray-800/50 text-center">
-              <Clock className="h-5 w-5 mx-auto text-emerald-400 mb-2" />
-              <p className="text-lg font-bold text-white">99.9%</p>
-              <p className="text-xs text-gray-400">Uptime</p>
+            <div className="p-4 rounded-lg bg-gray-800 text-center">
+              <Clock className="h-5 w-5 mx-auto text-gray-400 mb-2" />
+              <p className="text-lg font-bold text-gray-100">99.9%</p>
+              <p className="text-xs text-gray-500">Uptime</p>
             </div>
           </div>
         </CardContent>

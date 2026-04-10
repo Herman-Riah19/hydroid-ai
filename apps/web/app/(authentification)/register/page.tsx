@@ -51,7 +51,7 @@ export default function RegisterPage() {
         email: data.email,
         password: data.password,
       });
-      
+
       if (result) {
         router.push("/login?message=Inscription réussie");
       } else {
@@ -65,11 +65,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
         <CardHeader>
-          <CardTitle>Inscription</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-gray-100">Inscription</CardTitle>
+          <CardDescription className="text-gray-400">
             Créez votre compte pour accéder à l'application
           </CardDescription>
         </CardHeader>
@@ -110,16 +110,20 @@ export default function RegisterPage() {
                 {...formData.register("confirmPassword")}
               />
 
-              {error && <div className="text-red-500 text-sm">{error}</div>}
-              <Button type="submit" className="w-full" disabled={loading}>
+              {error && <div className="text-gray-400 text-sm">{error}</div>}
+              <Button
+                type="submit"
+                className="w-full bg-gray-100 text-black hover:bg-gray-200"
+                disabled={loading}
+              >
                 {loading ? <Loader className="animate-spin" /> : "S'inscrire"}
               </Button>
             </form>
           </Form>
           <div className="mt-4 text-center">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               Déjà un compte?{" "}
-              <a href="/login" className="text-blue-600 hover:underline">
+              <a href="/login" className="text-gray-300 hover:underline">
                 Se connecter
               </a>
             </span>

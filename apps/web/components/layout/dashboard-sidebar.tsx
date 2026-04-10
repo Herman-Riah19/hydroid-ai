@@ -6,27 +6,19 @@ import { usePathname } from "next/navigation";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { Badge } from "@repo/ui/components/ui/badge";
 import {
-  Search,
-  Globe,
   Brain,
-  Image as ImageIcon,
   Shield,
   Zap,
   Cpu,
-  Database,
-  Target,
   Activity,
   Settings,
   User,
   ChevronDown,
   ChevronRight,
-  Server,
   Terminal,
   Layers,
-  HardDrive,
-  Users,
-  Building2,
-  Box,
+  Search,
+  Globe,
 } from "lucide-react";
 
 interface NavItem {
@@ -37,42 +29,16 @@ interface NavItem {
   children?: { title: string; href: string }[];
 }
 
-const mainActions: NavItem[] = [
+const mainNav: NavItem[] = [
   { title: "Tableau de bord", href: "/dashboard", icon: Activity },
-  {
-    title: "Actions",
-    href: "/dashboard/actions",
-    icon: Zap,
-    children: [
-      { title: "OSINT", href: "/dashboard/actions/osint" },
-      { title: "Scraping", href: "/dashboard/actions/scraping" },
-      { title: "Analyse IA", href: "/dashboard/actions/analyze" },
-      { title: "Génération Image", href: "/dashboard/actions/image" },
-    ],
-  },
+  { title: "OSINT", href: "/dashboard/actions/osint", icon: Search },
+  { title: "Scraping", href: "/dashboard/actions/scraping", icon: Globe },
 ];
 
 const aiHub: NavItem[] = [
   { title: "AI Hub", href: "/dashboard/ai-hub", icon: Brain },
   { title: "Agents", href: "/dashboard/ai-hub/agents", icon: Terminal },
   { title: "Fine-Tuning", href: "/dashboard/ai-hub/fine-tuning", icon: Layers },
-];
-
-const dataManagement: NavItem[] = [
-  {
-    title: "Profils Humains",
-    href: "/dashboard/ai-hub/osint",
-    icon: Users,
-    badge: "OSINT",
-  },
-  { title: "Bâtiments", href: "/dashboard/ai-hub/buildings", icon: Building2 },
-  { title: "Objects", href: "/dashboard/ai-hub/objects", icon: Box },
-  {
-    title: "Armes",
-    href: "/dashboard/ai-hub/premium/weapons",
-    icon: Shield,
-    badge: "Pro",
-  },
 ];
 
 const system: NavItem[] = [
@@ -103,8 +69,8 @@ function NavGroup({ item, pathname }: { item: NavItem; pathname: string }) {
           className={clsx(
             "flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors",
             isActive
-              ? "bg-cyan-900/30 text-cyan-400"
-              : "text-gray-400 hover:bg-gray-800 hover:text-white",
+              ? "bg-gray-800 text-gray-100"
+              : "text-gray-400 hover:bg-gray-800 hover:text-gray-100",
           )}
         >
           <div className="flex items-center gap-3">
@@ -130,8 +96,8 @@ function NavGroup({ item, pathname }: { item: NavItem; pathname: string }) {
                   className={clsx(
                     "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                     isChildActive
-                      ? "bg-cyan-900/30 text-cyan-400"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                      ? "bg-gray-800 text-gray-100"
+                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-100",
                   )}
                 >
                   {child.title}
@@ -150,8 +116,8 @@ function NavGroup({ item, pathname }: { item: NavItem; pathname: string }) {
       className={clsx(
         "flex items-center gap-3 px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors",
         isActive
-          ? "bg-gradient-to-r from-cyan-900/30 to-transparent text-cyan-400 border-l-2 border-cyan-500"
-          : "text-gray-400 hover:bg-gray-800 hover:text-white",
+          ? "bg-gray-800 text-gray-100 border-l-2 border-gray-400"
+          : "text-gray-400 hover:bg-gray-800 hover:text-gray-100",
       )}
     >
       {Icon && <Icon className="h-4 w-4" />}
@@ -159,7 +125,7 @@ function NavGroup({ item, pathname }: { item: NavItem; pathname: string }) {
       {item.badge && (
         <Badge
           variant="secondary"
-          className="ml-auto text-xs bg-violet-500/20 text-violet-400"
+          className="ml-auto text-xs bg-gray-700 text-gray-300"
         >
           {item.badge}
         </Badge>
@@ -174,17 +140,17 @@ export function DashboardSidebar({ className }: SidebarProps) {
   return (
     <div
       className={clsx(
-        "flex flex-col h-full bg-gray-950 border-r border-gray-800",
+        "flex flex-col h-full bg-black border-r border-gray-800",
         className,
       )}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-800">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center">
-          <Shield className="h-5 w-5 text-white" />
+        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+          <Shield className="h-5 w-5 text-black" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-white">Hydroid</h1>
+          <h1 className="text-lg font-bold text-gray-100">Hydroid</h1>
           <p className="text-xs text-gray-500">Command Center</p>
         </div>
       </div>
@@ -195,7 +161,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           <span className="text-gray-400">Ollama</span>
           <span className="mx-1">|</span>
-          <span className="w-2 h-2 rounded-full bg-cyan-500"></span>
+          <span className="w-2 h-2 rounded-full bg-gray-500"></span>
           <span className="text-gray-400">LM Studio</span>
         </div>
       </div>
@@ -207,7 +173,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
           <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Principal
           </p>
-          {mainActions.map((item) => (
+          {mainNav.map((item: NavItem) => (
             <NavGroup key={item.href} item={item} pathname={pathname} />
           ))}
         </div>
@@ -218,16 +184,6 @@ export function DashboardSidebar({ className }: SidebarProps) {
             Intelligence IA
           </p>
           {aiHub.map((item) => (
-            <NavGroup key={item.href} item={item} pathname={pathname} />
-          ))}
-        </div>
-
-        {/* Data */}
-        <div className="mb-6">
-          <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Données
-          </p>
-          {dataManagement.map((item) => (
             <NavGroup key={item.href} item={item} pathname={pathname} />
           ))}
         </div>
@@ -245,15 +201,15 @@ export function DashboardSidebar({ className }: SidebarProps) {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-800">
-        <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-900/50">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center">
-            <User className="h-4 w-4 text-white" />
+        <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-900">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+            <User className="h-4 w-4 text-black" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">Admin</p>
+            <p className="text-sm font-medium text-gray-100 truncate">Admin</p>
             <p className="text-xs text-gray-500 truncate">admin@hydroid.ai</p>
           </div>
-          <Settings className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white" />
+          <Settings className="h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-300" />
         </div>
       </div>
     </div>
