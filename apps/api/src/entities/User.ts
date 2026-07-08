@@ -53,9 +53,6 @@ export class User {
   @OneToMany("FineTuneJob", "user")
   fineTuneJobs!: any[];
 
-  @OneToMany("OsintSearch", "user")
-  osintSearches!: any[];
-
   @CreateDateColumn()
   @Property()
   createdAt!: Date;

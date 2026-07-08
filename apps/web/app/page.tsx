@@ -22,29 +22,23 @@ import {
   Layers,
   Bot,
   Scissors,
-  FileSearch,
   Wand2,
-  Microscope,
-  Building2,
-  Users,
-  Package,
-  Car,
+  Bug,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function HomePage() {
   const features = [
     {
-      icon: Search,
-      title: "OSINT Avancé",
+      icon: Shield,
+      title: "Security Scanner",
       description:
-        "Recherche approfondie de personas, emails, domaines et localisation",
+        "Scan complet de vulnérabilités web : en-têtes, cookies, CORS, SSL/TLS",
     },
     {
-      icon: Globe,
-      title: "Web Scraping",
-      description:
-        "Collecte automatique de données depuis n'importe quelle source web",
+      icon: Bug,
+      title: "Détection SQLi & XSS",
+      description: "Test d'injection SQL et XSS avec 15 payloads chacun",
     },
     {
       icon: Brain,
@@ -53,15 +47,16 @@ export default function HomePage() {
         "Traitement intelligent avec Qwen, Llama et vos modèles personnalisés",
     },
     {
-      icon: ImageIcon,
-      title: "Génération d'Images",
-      description: "Création de visuels IA pour vos rapports et présentations",
+      icon: Globe,
+      title: "Rapports Détaillés",
+      description:
+        "Preuves de concept, recommandations et remédiations pour chaque vulnérabilité",
     },
   ];
 
   const stats = [
-    { value: "10K+", label: "Recherches OSINT", icon: Search },
-    { value: "50M+", label: "Pages Scrapées", icon: Globe },
+    { value: "15+", label: "Modules de Scan", icon: Shield },
+    { value: "30+", label: "Payloads Sécurité", icon: Bug },
     { value: "99.9%", label: "Précision IA", icon: Brain },
     { value: "24/7", label: "Monitoring", icon: Shield },
   ];
@@ -89,49 +84,16 @@ export default function HomePage() {
       href: "/dashboard/ai-hub/agents",
     },
     {
-      title: "OSINT",
-      description: "Recherche d'intelligence open source",
-      icon: FileSearch,
-      href: "/dashboard/ai-hub/osint",
+      title: "Security Scanner",
+      description: "Scan de vulnérabilités web",
+      icon: Shield,
+      href: "/dashboard/ai-hub/security",
     },
     {
       title: "Fine-Tuning",
       description: "Entraînez vos propres modèles",
       icon: Wand2,
       href: "/dashboard/ai-hub/fine-tuning",
-    },
-  ];
-
-  const osintActions = [
-    {
-      title: "Profil Humain",
-      description: "Recherche de personas",
-      icon: Users,
-      href: "/dashboard/actions/osint?type=human",
-    },
-    {
-      title: "Bâtiment",
-      description: "Intelligence bâtiments",
-      icon: Building2,
-      href: "/dashboard/actions/osint?type=building",
-    },
-    {
-      title: "Objet",
-      description: "Suivi d'objets",
-      icon: Package,
-      href: "/dashboard/actions/osint?type=object",
-    },
-    {
-      title: "Véhicule",
-      description: "Identification véhicules",
-      icon: Car,
-      href: "/dashboard/actions/osint?type=vehicle",
-    },
-    {
-      title: "Location",
-      description: "Analyse de localisations",
-      icon: Microscope,
-      href: "/dashboard/actions/osint?type=location",
     },
   ];
 
@@ -201,13 +163,14 @@ export default function HomePage() {
             </Badge>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-gray-100">
-              Intelligence &<br />
+              Sécurité &<br />
               <span className="text-gray-400">Analyse Avancée</span>
             </h1>
 
             <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-              Plateforme de renseignement et d'analyse alimentée par l'IA.
-              OSINT, scraping, analyse et génération - tout en un seul endroit.
+              Plateforme de sécurité applicative alimentée par l'IA. Scan de
+              vulnérabilités, détection SQLi/XSS, analyse - tout en un seul
+              endroit.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -244,17 +207,20 @@ export default function HomePage() {
                 </div>
                 <div className="p-4 font-mono text-sm">
                   <div className="text-gray-300">
-                    $ hydroid osint search "John Doe"
+                    $ hydroid security scan "example.com"
                   </div>
                   <div className="text-gray-600 mt-2">
-                    [+] Recherche en cours...
+                    [+] Scan des en-têtes de sécurité...
                   </div>
                   <div className="text-gray-600">
-                    [+] Sources: Google, LinkedIn, Twitter
+                    [+] X-Content-Type-Options: manquant
                   </div>
-                  <div className="text-gray-400">[✓] 3 profils trouvés</div>
+                  <div className="text-gray-400">[✓] CORS: configuré</div>
                   <div className="text-gray-600 mt-1">
-                    [+] Score de risque: 23%
+                    [+] SSL/TLS: certificat valide
+                  </div>
+                  <div className="text-yellow-400">
+                    [!] 2 vulnérabilités trouvées
                   </div>
                 </div>
               </div>
@@ -371,14 +337,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* OSINT Actions */}
+      {/* Security Actions */}
       <section className="py-20 bg-gray-950">
         <div className="max-w-7xl mx-auto px-6">
-          <ActionGrid
-            title="Actions OSINT"
-            subtitle="Choisissez votre type de recherche"
-            actions={osintActions}
-          />
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Prêt à sécuriser votre site ?
+            </h2>
+            <p className="text-xl text-gray-400">
+              Scannez les vulnérabilités, identifiez les failles, renforcez
+              votre sécurité
+            </p>
+          </div>
+          <div className="text-center">
+            <Link href="/dashboard/ai-hub/security">
+              <Button
+                size="lg"
+                className="h-14 px-12 bg-gray-100 text-black hover:bg-gray-200 text-lg"
+              >
+                <Shield className="mr-2 h-5 w-5" />
+                Lancer un Scan Gratuit
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -1,13 +1,18 @@
 import { Injectable, OnInit } from "@tsed/di";
-import { ImageGenerationSkill } from "src/tools/AIImageGenerator";
-import { LLMSkill } from "src/tools/LLM";
-import { OsintSkill } from "src/tools/Osint";
-import { ScrapingSkill } from "src/tools/Scrapping";
-import { IScrapingSkill, IOSINTSkill, ILLMSkill, IOSINTImageSkill } from "src/types";
+import { WebScanner, createWebScanner } from "src/tools/WebScanner.js";
+import {
+  VulnerabilityAnalyzer,
+  createVulnerabilityAnalyzer,
+} from "src/tools/VulnerabilityAnalyzer.js";
+import {
+  SQLInjectionTester,
+  createSQLInjectionTester,
+} from "src/tools/SQLInjectionTester.js";
+import { LLMSkill } from "src/tools/LLM.js";
+import { ILLMSkill } from "src/types/LLMType.js";
 
 export interface SkillFactoryConfig {
-  scraping?: { enabled?: boolean; timeout?: number };
-  osint?: { enabled?: boolean };
+  scanner?: { timeout?: number; concurrentRequests?: number };
   llm?: {
     provider?: "ollama" | "lmstudio";
     model?: string;
@@ -15,19 +20,14 @@ export interface SkillFactoryConfig {
     temperature?: number;
     maxTokens?: number;
   };
-  imageGeneration?: {
-    provider?: "stable-diffusion" | "dall-e";
-    baseUrl?: string;
-    apiKey?: string;
-  };
 }
 
 @Injectable()
 export class SkillFactory implements OnInit {
-  private scrapingSkill: ScrapingSkill | null = null;
-  private osintSkill: OsintSkill | null = null;
+  private webScanner: WebScanner | null = null;
+  private vulnAnalyzer: VulnerabilityAnalyzer | null = null;
+  private sqliTester: SQLInjectionTester | null = null;
   private llmSkill: LLMSkill | null = null;
-  private imageGenerationSkill: ImageGenerationSkill | null = null;
   private initialized = false;
 
   async $onInit() {
@@ -37,91 +37,58 @@ export class SkillFactory implements OnInit {
   async initialize(config?: SkillFactoryConfig): Promise<void> {
     if (this.initialized) return;
 
-    const scraperConfig = config?.scraping ?? { enabled: true };
-    this.scrapingSkill = new ScrapingSkill({
-      enabled: scraperConfig.enabled ?? true,
-      timeout: scraperConfig.timeout ?? 30000,
+    this.webScanner = createWebScanner({
+      timeout: config?.scanner?.timeout ?? 30000,
+      concurrentRequests: config?.scanner?.concurrentRequests ?? 5,
     });
-    await this.scrapingSkill.initialize();
+    await this.webScanner.initialize();
 
-    const osintConfig = config?.osint ?? { enabled: true };
-    this.osintSkill = new OsintSkill(this.scrapingSkill, {
-      enabled: osintConfig.enabled ?? true,
-    });
-    await this.osintSkill.initialize();
+    this.vulnAnalyzer = createVulnerabilityAnalyzer();
+    await this.vulnAnalyzer.initialize();
+
+    this.sqliTester = createSQLInjectionTester();
+    await this.sqliTester.initialize();
 
     const llmConfig = config?.llm ?? {};
-    if (llmConfig.provider === "lmstudio") {
-      this.llmSkill = new LLMSkill({
-        provider: "lmstudio",
-        model: llmConfig.model ?? "qwen/qwen3-8b",
-        baseUrl: llmConfig.baseUrl ?? "http://localhost:1234/v1",
-        enabled: true,
-        ...llmConfig,
-      });
-    } else {
-      this.llmSkill = new LLMSkill({
-        provider: "ollama",
-        model: llmConfig.model ?? "qwen2.5:14b",
-        enabled: true,
-        ...llmConfig,
-      });
-    }
+    this.llmSkill = new LLMSkill({
+      provider: llmConfig.provider ?? "ollama",
+      model: llmConfig.model ?? "qwen2.5:14b",
+      baseUrl: llmConfig.baseUrl ?? "http://localhost:11434",
+      enabled: true,
+      ...llmConfig,
+    });
     await this.llmSkill.initialize();
-
-    const imageConfig = config?.imageGeneration ?? {};
-    if (imageConfig.provider === "stable-diffusion") {
-      this.imageGenerationSkill = new ImageGenerationSkill({
-        provider: "stable-diffusion",
-        baseUrl: "http://localhost:7860",
-        enabled: true,
-      });
-    } else {
-      this.imageGenerationSkill = new ImageGenerationSkill({
-        provider: imageConfig.provider ?? "stable-diffusion",
-        baseUrl: imageConfig.baseUrl ?? "http://localhost:7860",
-        enabled: true,
-      });
-    }
-    await this.imageGenerationSkill.initialize();
 
     this.initialized = true;
   }
 
   async dispose(): Promise<void> {
-    await this.scrapingSkill?.dispose();
-    await this.osintSkill?.dispose();
+    await this.webScanner?.dispose();
+    await this.vulnAnalyzer?.dispose();
+    await this.sqliTester?.dispose();
     await this.llmSkill?.dispose();
-    await this.imageGenerationSkill?.dispose();
     this.initialized = false;
   }
 
-  get scraping(): IScrapingSkill {
-    if (!this.scrapingSkill) {
-      throw new Error("Scraping skill not initialized");
-    }
-    return this.scrapingSkill;
+  get scanner(): WebScanner {
+    if (!this.webScanner) throw new Error("WebScanner not initialized");
+    return this.webScanner;
   }
 
-  get osint(): IOSINTSkill {
-    if (!this.osintSkill) {
-      throw new Error("OSINT skill not initialized");
-    }
-    return this.osintSkill;
+  get getVulnAnalyzer(): VulnerabilityAnalyzer {
+    if (!this.vulnAnalyzer)
+      throw new Error("VulnerabilityAnalyzer not initialized");
+    return this.vulnAnalyzer;
+  }
+
+  get getSqliTester(): SQLInjectionTester {
+    if (!this.sqliTester) throw new Error("SQLInjectionTester not initialized");
+    return this.sqliTester;
   }
 
   get llm(): ILLMSkill {
-    if (!this.llmSkill) {
-      throw new Error("LLM skill not initialized");
-    }
+    if (!this.llmSkill) throw new Error("LLM skill not initialized");
     return this.llmSkill;
-  }
-
-  get imageGeneration(): IOSINTImageSkill {
-    if (!this.imageGenerationSkill) {
-      throw new Error("Image generation skill not initialized");
-    }
-    return this.imageGenerationSkill;
   }
 
   get isInitialized(): boolean {

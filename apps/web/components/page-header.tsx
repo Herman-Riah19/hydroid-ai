@@ -26,8 +26,12 @@ export function PageHeader({
   return (
     <div className={`flex items-center justify-between ${className || ""}`}>
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-        {description && <p className="text-gray-600">{description}</p>}
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          {title}
+        </h1>
+        {description && (
+          <p className="text-sm text-muted-foreground">{description}</p>
+        )}
         {children}
       </div>
 

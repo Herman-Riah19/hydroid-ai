@@ -26,7 +26,7 @@ export default function AIHubPage() {
     { name: "Agents actifs", value: "5", icon: Bot },
     { name: "Tâches en cours", value: "12", icon: Settings },
     { name: "Modèles IA", value: "8", icon: Brain },
-    { name: "Recherches OSINT", value: "24", icon: Search },
+    { name: "Scans sécurité", value: "24", icon: Shield },
   ];
 
   const quickActions = [
@@ -36,9 +36,9 @@ export default function AIHubPage() {
       icon: Plus,
     },
     {
-      name: "Nouvelle Recherche",
-      href: "/dashboard/ai-hub/osint/search",
-      icon: Search,
+      name: "Security Scanner",
+      href: "/dashboard/ai-hub/security",
+      icon: Shield,
     },
     {
       name: "Fine-tuning",
@@ -57,7 +57,7 @@ export default function AIHubPage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-100">AI Hub</h1>
         <p className="text-gray-500">
-          Gérez vos agents IA, fine-tuning et recherches OSINT
+          Gérez vos agents IA, fine-tuning et scans de sécurité
         </p>
       </div>
 
@@ -149,8 +149,8 @@ export default function AIHubPage() {
                 <div className="flex items-center gap-3">
                   <Bot className="h-5 w-5 text-gray-400" />
                   <div>
-                    <p className="font-medium text-gray-100">OSINT Hunter</p>
-                    <p className="text-sm text-gray-500">Type: OSINT</p>
+                    <p className="font-medium text-gray-100">Security Hunter</p>
+                    <p className="text-sm text-gray-500">Type: SECURITY</p>
                   </div>
                 </div>
                 <Badge variant="outline">Inactif</Badge>
@@ -162,32 +162,30 @@ export default function AIHubPage() {
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader>
             <CardTitle className="text-gray-100 flex items-center">
-              <Search className="mr-2 h-5 w-5 text-gray-400" />
-              Recherches OSINT
+              <Shield className="mr-2 h-5 w-5 text-gray-400" />
+              Scans Récents
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-100">
-                    Recherche bâtiment
-                  </p>
-                  <p className="text-sm text-gray-500">Tour Eiffel, Paris</p>
+                  <p className="font-medium text-gray-100">Scan: example.com</p>
+                  <p className="text-sm text-gray-500">Headers & CORS</p>
                 </div>
                 <Badge>Complété</Badge>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-100">Profil humain</p>
-                  <p className="text-sm text-gray-500">John Doe</p>
+                  <p className="font-medium text-gray-100">SQLi Test</p>
+                  <p className="text-sm text-gray-500">api.example.com</p>
                 </div>
                 <Badge variant="secondary">En cours</Badge>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-100">Analyse objet</p>
-                  <p className="text-sm text-gray-500">iPhone 15 Pro</p>
+                  <p className="font-medium text-gray-100">XSS Scan</p>
+                  <p className="text-sm text-gray-500">app.example.com</p>
                 </div>
                 <Badge variant="outline">En attente</Badge>
               </div>

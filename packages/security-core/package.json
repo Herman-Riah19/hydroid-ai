@@ -1,0 +1,15 @@
+{
+  "name": "@hydroid/security-core",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "main": "./src/index.ts",
+  "devDependencies": {
+    "@hydroid/typescript-config": "*",
+    "typescript": "^5.4.5"
+  }
+}

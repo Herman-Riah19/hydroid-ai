@@ -1,0 +1,17 @@
+{
+  "name": "@hydroid/scanner-sqli",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@hydroid/security-core": "*"
+  },
+  "devDependencies": {
+    "@hydroid/typescript-config": "*",
+    "typescript": "^5.4.5"
+  }
+}

@@ -15,6 +15,10 @@
     "enums": "./prisma/generated/enums/*.ts"
   },
   "dependencies": {
+    "@hydroid/security-core": "*",
+    "@hydroid/scanner-web": "*",
+    "@hydroid/scanner-sqli": "*",
+    "@hydroid/scanner-xss": "*",
     "@prisma/client": "^6.19.0",
     "@tsed/ajv": "^8.18.2",
     "@tsed/barrels": "^6.6.3",

@@ -14,7 +14,7 @@ import methodOverride from "method-override";
 
 @Configuration({
   ...config,
-  acceptMimes: ["application/json"],
+  acceptMimes: ["application/json", "text/event-stream"],
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
   swagger: [

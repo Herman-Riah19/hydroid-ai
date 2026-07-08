@@ -7,10 +7,6 @@ import { AgentExecution } from "../entities/AgentExecution.js";
 import { AIModel } from "../entities/AIModel.js";
 import { FineTuneJob } from "../entities/FineTuneJob.js";
 import { LoRAConfig } from "../entities/LoRAConfig.js";
-import { OsintSearch } from "../entities/OsintSearch.js";
-import { HumanProfile } from "../entities/HumanProfile.js";
-import { Building } from "../entities/Building.js";
-import { Item } from "../entities/Object.js";
 import { Weapon } from "../entities/Weapon.js";
 
 const options: DataSourceOptions = {
@@ -28,10 +24,6 @@ const options: DataSourceOptions = {
     AIModel,
     FineTuneJob,
     LoRAConfig,
-    OsintSearch,
-    HumanProfile,
-    Building,
-    Item,
     Weapon,
   ],
 };

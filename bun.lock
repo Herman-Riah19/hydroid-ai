@@ -17,6 +17,10 @@
       "name": "@hydroid/api",
       "version": "1.0.0",
       "dependencies": {
+        "@hydroid/scanner-sqli": "*",
+        "@hydroid/scanner-web": "*",
+        "@hydroid/scanner-xss": "*",
+        "@hydroid/security-core": "*",
         "@prisma/client": "^6.19.0",
         "@tsed/ajv": "^8.18.2",
         "@tsed/barrels": "^6.6.3",
@@ -152,6 +156,47 @@
         "eslint-config-turbo": "^2.0.0",
         "eslint-plugin-only-warn": "^1.1.0",
         "typescript": "^5.3.3",
+      },
+    },
+    "packages/scanner-sqli": {
+      "name": "@hydroid/scanner-sqli",
+      "version": "0.0.1",
+      "dependencies": {
+        "@hydroid/security-core": "*",
+      },
+      "devDependencies": {
+        "@hydroid/typescript-config": "*",
+        "typescript": "^5.4.5",
+      },
+    },
+    "packages/scanner-web": {
+      "name": "@hydroid/scanner-web",
+      "version": "0.0.1",
+      "dependencies": {
+        "@hydroid/security-core": "*",
+      },
+      "devDependencies": {
+        "@hydroid/typescript-config": "*",
+        "typescript": "^5.4.5",
+      },
+    },
+    "packages/scanner-xss": {
+      "name": "@hydroid/scanner-xss",
+      "version": "0.0.1",
+      "dependencies": {
+        "@hydroid/security-core": "*",
+      },
+      "devDependencies": {
+        "@hydroid/typescript-config": "*",
+        "typescript": "^5.4.5",
+      },
+    },
+    "packages/security-core": {
+      "name": "@hydroid/security-core",
+      "version": "0.0.1",
+      "devDependencies": {
+        "@hydroid/typescript-config": "*",
+        "typescript": "^5.4.5",
       },
     },
     "packages/typescript-config": {
@@ -370,6 +415,14 @@
     "@hydroid/docs": ["@hydroid/docs@workspace:apps/docs"],
 
     "@hydroid/eslint-config": ["@hydroid/eslint-config@workspace:packages/eslint-config"],
+
+    "@hydroid/scanner-sqli": ["@hydroid/scanner-sqli@workspace:packages/scanner-sqli"],
+
+    "@hydroid/scanner-web": ["@hydroid/scanner-web@workspace:packages/scanner-web"],
+
+    "@hydroid/scanner-xss": ["@hydroid/scanner-xss@workspace:packages/scanner-xss"],
+
+    "@hydroid/security-core": ["@hydroid/security-core@workspace:packages/security-core"],
 
     "@hydroid/typescript-config": ["@hydroid/typescript-config@workspace:packages/typescript-config"],
 
