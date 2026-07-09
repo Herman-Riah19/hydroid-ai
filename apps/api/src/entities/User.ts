@@ -44,8 +44,6 @@ export class User {
   @Property()
   premiumUntil?: Date;
 
-  @OneToMany("Member", "user")
-  members!: any[];
 
   @OneToMany("AIAgent", "user")
   agents!: any[];

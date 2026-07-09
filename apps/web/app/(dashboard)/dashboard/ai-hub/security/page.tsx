@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@repo/ui/components/ui/card";
 import { Button } from "@repo/ui/components/ui/button";
-import { Badge } from "@repo/ui/components/ui/badge";
 import { useAuthStore } from "@/store/auth-store";
 import { SecurityServices } from "@/services/securityServices";
 import { SecurityTerminal } from "@/components/security/terminal";
@@ -140,10 +139,9 @@ export default function SecurityPage() {
     ]);
   }, []);
 
-  const filteredVulns =
-    result?.vulnerabilities.filter((v) =>
-      activeTab === "all" ? true : v.severity === activeTab,
-    ) ?? [];
+  const filteredVulns = result?.vulnerabilities?.filter((v) =>
+    activeTab === "all" ? true : v.severity === activeTab,
+  ) ?? [];
 
   const summary = result?.summary;
 
@@ -245,9 +243,8 @@ export default function SecurityPage() {
                         onClick={() =>
                           setActiveTab(activeTab === sev ? "all" : sev)
                         }
-                        className={`flex flex-col items-center gap-1 rounded-lg border p-3 transition-all cursor-pointer ${
-                          SEVERITY_COLORS[sev]
-                        } ${activeTab === sev ? "ring-1 ring-gray-500" : "opacity-60 hover:opacity-100"}`}
+                        className={`flex flex-col items-center gap-1 rounded-lg border p-3 transition-all cursor-pointer ${SEVERITY_COLORS[sev]
+                          } ${activeTab === sev ? "ring-1 ring-gray-500" : "opacity-60 hover:opacity-100"}`}
                       >
                         <Icon className="h-4 w-4" />
                         <span className="text-lg font-bold tabular-nums">

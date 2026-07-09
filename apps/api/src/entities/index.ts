@@ -7,7 +7,6 @@ export * from "./AgentExecution.js";
 export * from "./AgentTask.js";
 export * from "./FineTuneJob.js";
 export * from "./LoRAConfig.js";
-export * from "./Member.js";
 export * from "./User.js";
 export * from "./Weapon.js";
 export * from "./enums/AgentStatus.js";

@@ -1,5 +1,5 @@
-import { Injectable, Inject, registerProvider } from "@tsed/di";
-import { DataSource, FindOneOptions } from "typeorm";
+import { Injectable, registerProvider } from "@tsed/di";
+import { FindOneOptions } from "typeorm";
 import { AppDataSource } from "../datasources/AppDataSource.js";
 import { User } from "../entities/User.js";
 

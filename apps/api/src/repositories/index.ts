@@ -7,6 +7,5 @@ export * from "./AiAgentsRepository.js";
 export * from "./AiModelsRepository.js";
 export * from "./FineTuneJobsRepository.js";
 export * from "./LoRaConfigsRepository.js";
-export * from "./MembersRepository.js";
 export * from "./UsersRepository.js";
 export * from "./WeaponsRepository.js";

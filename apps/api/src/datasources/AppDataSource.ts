@@ -1,6 +1,5 @@
 import { DataSource, DataSourceOptions } from "typeorm";
 import { User } from "../entities/User.js";
-import { Member } from "../entities/Member.js";
 import { AIAgent } from "../entities/AIAgent.js";
 import { AgentTask } from "../entities/AgentTask.js";
 import { AgentExecution } from "../entities/AgentExecution.js";
@@ -17,7 +16,6 @@ const options: DataSourceOptions = {
   logging: false,
   entities: [
     User,
-    Member,
     AIAgent,
     AgentTask,
     AgentExecution,

@@ -51,9 +51,9 @@ export class SkillFactory implements OnInit {
 
     const llmConfig = config?.llm ?? {};
     this.llmSkill = new LLMSkill({
-      provider: llmConfig.provider ?? "ollama",
-      model: llmConfig.model ?? "qwen2.5:14b",
-      baseUrl: llmConfig.baseUrl ?? "http://localhost:11434",
+      provider: llmConfig.provider ?? "lmstudio",
+      model: llmConfig.model ?? "qwen3-8b",
+      baseUrl: llmConfig.baseUrl ?? "http://10.23.0.216:1234",
       enabled: true,
       ...llmConfig,
     });
