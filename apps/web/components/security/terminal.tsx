@@ -16,15 +16,24 @@ interface SecurityTerminalProps {
 }
 
 const TYPE_STYLES: Record<string, string> = {
-  "scan-start": "text-blue-400",
-  "scan-ok": "text-green-400",
-  "scan-vulns": "text-yellow-400",
-  "scan-error": "text-red-400",
-  init: "text-cyan-400",
-  info: "text-gray-400",
-  complete: "text-green-300 font-semibold",
-  connected: "text-green-500",
-  error: "text-red-400 font-semibold",
+  "scan-start": "text-blue-500",
+  "scan-ok": "text-primary",
+  "scan-vulns": "text-yellow-600",
+  "scan-error": "text-destructive",
+  init: "text-secondary",
+  info: "text-muted-foreground",
+  complete: "text-primary font-semibold",
+  connected: "text-primary",
+  error: "text-destructive font-semibold",
+};
+
+const TYPE_PREFIX: Record<string, string> = {
+  "scan-start": "→",
+  "scan-ok": "✓",
+  "scan-vulns": "⚠",
+  "scan-error": "✗",
+  error: "!!",
+  complete: "✔",
 };
 
 export function SecurityTerminal({ logs, className }: SecurityTerminalProps) {
@@ -37,50 +46,43 @@ export function SecurityTerminal({ logs, className }: SecurityTerminalProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-800 bg-gray-950 font-mono text-sm overflow-hidden",
+        "overflow-hidden rounded-lg border border-border bg-card font-mono text-sm",
         className,
       )}
     >
-      <div className="flex items-center gap-2 border-b border-gray-800 px-4 py-2 bg-gray-900/50">
-        <Terminal className="h-4 w-4 text-gray-400" />
-        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+      <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-2">
+        <Terminal className="size-4 text-muted-foreground" />
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Console
         </span>
-        <span className="ml-auto text-xs text-gray-600">
+        <span className="ml-auto text-xs text-muted-foreground/50">
           {logs.length} lines
         </span>
       </div>
-      <div className="h-64 overflow-y-auto p-4 space-y-1">
+      <div className="h-full overflow-y-auto p-4 space-y-1">
         {logs.length === 0 && (
-          <p className="text-gray-600 italic">En attente du scan...</p>
+          <p className="italic text-muted-foreground/50">
+            En attente du scan...
+          </p>
         )}
         {logs.map((log, i) => (
           <div key={i} className="flex gap-2">
-            <span className="text-gray-600 shrink-0 w-16 text-right tabular-nums">
+            <span className="w-16 shrink-0 text-right tabular-nums text-muted-foreground/50">
               {log.timestamp}
             </span>
             <span
               className={cn(
                 "shrink-0",
-                TYPE_STYLES[log.type] || "text-gray-300",
+                TYPE_STYLES[log.type] || "text-foreground",
               )}
             >
-              {log.type === "scan-start"
-                ? "→"
-                : log.type === "scan-ok"
-                  ? "✓"
-                  : log.type === "scan-vulns"
-                    ? "⚠"
-                    : log.type === "scan-error"
-                      ? "✗"
-                      : log.type === "error"
-                        ? "!!"
-                        : log.type === "complete"
-                          ? "✔"
-                          : "·"}
+              {TYPE_PREFIX[log.type] || "·"}
             </span>
             <span
-              className={cn("flex-1", TYPE_STYLES[log.type] || "text-gray-300")}
+              className={cn(
+                "flex-1",
+                TYPE_STYLES[log.type] || "text-foreground",
+              )}
             >
               {log.message}
             </span>

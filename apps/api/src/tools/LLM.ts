@@ -1,7 +1,9 @@
 import { ISkillExecutor } from "src/types/SkillbaseType.js";
 import { ILLMSkill, ChatMessage, LLMConfig } from "src/types/LLMType.js";
 
-export class LLMSkill implements ILLMSkill, ISkillExecutor<ChatMessage[], string> {
+export class LLMSkill
+  implements ILLMSkill, ISkillExecutor<ChatMessage[], string>
+{
   readonly name = "LLMSkill";
   readonly version = "1.0.0";
 
@@ -31,7 +33,8 @@ export class LLMSkill implements ILLMSkill, ISkillExecutor<ChatMessage[], string
     if (this.config.provider === "ollama") {
       return this.config.baseUrl || "http://localhost:11434";
     }
-    return this.config.baseUrl || "http://localhost:1234/v1";
+    const base = this.config.baseUrl || "http://localhost:1234/v1";
+    return base.endsWith("/v1") ? base : `${base}/v1`;
   }
 
   async chat(messages: ChatMessage[]): Promise<string> {
@@ -209,7 +212,7 @@ export class LLMSkill implements ILLMSkill, ISkillExecutor<ChatMessage[], string
       throw new Error(`LLM stream failed: ${response.status}`);
     }
 
-    return {isOllama, response};
+    return { isOllama, response };
   }
 
   private ensureInitialized(): void {

@@ -16,7 +16,7 @@ export class SecurityController {
   @Title("Security Scan")
   @Summary("Run a full security scan on a URL")
   @Description(
-    "Scans a target URL for security vulnerabilities including headers, cookies, CORS, SSL, SQLi, and XSS",
+    "Scans a target URL for security vulnerabilities via 6 parallel modules: security headers, cookies, CORS, SSL/TLS, SQL injection, and XSS",
   )
   @Returns(200, Object)
   async scanUrl(
@@ -33,7 +33,7 @@ export class SecurityController {
   @Title("Vulnerability Analysis")
   @Summary("Analyze URL for web vulnerabilities")
   @Description(
-    "Analyzes headers, cookies, CORS configuration, SSL/TLS, and XSS vulnerabilities",
+    "Analyzes security headers, cookies, CORS configuration, and SSL/TLS settings",
   )
   @Returns(200, Object)
   async analyzeUrl(@BodyParams() body: { url: string }): Promise<ScanResult> {
@@ -54,7 +54,9 @@ export class SecurityController {
   @Post("/full-audit")
   @Title("Full Security Audit")
   @Summary("Run complete security audit")
-  @Description("Combines all security scans into a comprehensive audit report")
+  @Description(
+    "Runs all security modules (scan + analysis + SQLi test) in parallel and combines results",
+  )
   @Returns(200, Object)
   async fullAudit(@BodyParams() body: { url: string }): Promise<{
     scan: ScanResult;

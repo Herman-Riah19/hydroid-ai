@@ -6,146 +6,124 @@
 
 ## Architecture
 
-### Backend (Ts.ED + TypeORM + SQLite)
+### Backend (Ts.ED + Prisma + SQLite)
 
-- **Framework**: Ts.ED (Node.js/Bun)
-- **ORM**: TypeORM
+- **Framework**: Ts.ED v8 (Node.js/Bun)
+- **ORM**: Prisma + TypeORM
 - **Database**: SQLite
 - **AI Integration**: Ollama + LM Studio
 
 ### Frontend (Next.js)
 
-- **Framework**: Next.js 14+
-- **Styling**: Custom CSS + Shadcn UI
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS v4 + shadcn/ui
 - **State Management**: Zustand
+- **Validation**: Zod + react-hook-form
 
 ## Core Features
 
-### 1. AI Agents & Actions
+### 1. Security Scanner
 
-Unlike traditional AI agent hubs, Hydroid focuses on **actions** rather than chat interfaces:
+Web security scanner with 6 parallel modules:
 
-- **OSINT Operations**: Human profiling, building intelligence, object tracking
-- **Web Scraping**: Automated data collection from multiple sources
-- **Data Analysis**: Pattern recognition, threat assessment
-- **Image Generation**: AI-powered visual content creation
-- **Text Processing**: NLP, sentiment analysis, entity extraction
+- **Security Headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- **Cookie Analysis** — Secure, HttpOnly, SameSite attributes
+- **CORS Configuration** — Cross-origin resource sharing analysis
+- **SSL/TLS** — HTTPS verification and HSTS header check
+- **SQL Injection** — Error-based, time-based, union-based, and boolean-based detection with baseline comparison
+- **XSS Detection** — Reflected XSS via payload reflection analysis
 
-### 2. Fine-Tuning & Custom Models
+LLM-powered analysis via LM Studio for risk summary and remediation recommendations.
 
-- Integration with Qwen (fine-tuned via Ollama)
-- LM Studio support for local model deployment
-- Custom LoRA configurations
+### 2. AI Agents & Fine-Tuning
 
-### 3. Specialized Skills
+- Agent configuration and task execution
+- Fine-tuning job management (Ollama / LM Studio)
+- LoRA configuration
 
-#### Scraper Skills
-
-- Web crawling
-- Social media scraping
-- Dark web monitoring
-- API data extraction
-
-#### OSINT Skills
+### 3. OSINT Operations
 
 - Human profiling
-- Infrastructure mapping
-- Geolocation analysis
-- Image reverse search
-
-#### Image Generation
-
-- Diffusion models integration
-- Style transfer
-- Face generation
-- Scene reconstruction
+- Building intelligence
+- Object tracking
 
 ## API Endpoints
+
+### Security
+
+- `POST /api/security/scan` — Full security scan with SSE streaming
+- `POST /api/security/analyze` — Headers, cookies, CORS, SSL analysis
+- `POST /api/security/sqli-test` — SQL injection testing
+- `POST /api/security/full-audit` — Combined security audit
 
 ### Users
 
 - `POST /api/users` - Create user
 - `POST /api/users/login` - Login
-- `GET /api/users` - Get all users
+- `GET /api/users` - List users
 - `GET /api/users/:id` - Get user by ID
-
-### Weapons (Premium Content)
-
-- `POST /api/premium/weapons` - Create weapon
-- `GET /api/premium/weapons` - List weapons
-- `GET /api/premium/weapons/:id` - Get weapon
-- `PUT /api/premium/weapons/:id` - Update weapon
-- `DELETE /api/premium/weapons/:id` - Delete weapon
 
 ### AI Agents
 
 - `POST /api/agents` - Create agent
 - `GET /api/agents` - List agents
-- `GET /api/agents/:id` - Get agent
-- `PUT /api/agents/:id` - Update agent
-- `DELETE /api/agents/:id` - Delete agent
-- `POST /api/agents/:id/activate` - Activate agent
-- `POST /api/agents/:id/deactivate` - Deactivate agent
-- `POST /api/agents/:id/tasks` - Create task
+- `POST /api/agents/:id/activate` - Activate
 - `POST /api/agents/:id/execute` - Execute task
 
 ### Fine-Tuning
 
-- `POST /api/ai-models` - Create AI model
-- `GET /api/ai-models` - List models
-- `POST /api/fine-tuning` - Create fine-tuning job
-- `GET /api/fine-tuning` - List jobs
+- `POST /api/ai-models` - Create model
+- `POST /api/fine-tuning` - Create job
 - `POST /api/fine-tuning/:id/start` - Start job
-- `POST /api/fine-tuning/:id/cancel` - Cancel job
 
-### OSINT
+### Premium Content
 
-- `POST /api/osint/search` - Create search
-- `GET /api/osint/searches` - List searches
-- `GET /api/osint/humans` - Human profiles
-- `GET /api/osint/buildings` - Building intelligence
-- `GET /api/osint/objects` - Object tracking
-
-### LoRA Configs
-
-- `POST /api/lora-configs` - Create config
-- `GET /api/lora-configs` - List configs
+- `POST /api/premium/weapons` - Create
+- `GET /api/premium/weapons` - List
+- `GET /api/premium/weapons/:id` - Get
+- `PUT /api/premium/weapons/:id` - Update
+- `DELETE /api/premium/weapons/:id` - Delete
 
 ## Technology Stack
 
 ### Backend
 
 - Bun runtime
-- Ts.ED framework
-- TypeORM
+- Ts.ED v8 framework
+- Prisma + TypeORM
 - SQLite
-- Ollama SDK
-- LM Studio integration
+- JWT authentication
+- Ollama SDK + LM Studio integration
 
 ### Frontend
 
-- Next.js 14
-- React 18
+- Next.js 16 (App Router)
+- React 19
 - TypeScript
-- Tailwind CSS (optional)
+- Tailwind CSS v4
+- shadcn/ui components
 - Zustand
+- Zod validation
+
+### Security Packages
+
+- `@hydroid/security-core` — Shared types, HTTP client, utilities
+- `@hydroid/scanner-web` — Header, Cookie, CORS, SSL analyzers
+- `@hydroid/scanner-sqli` — SQL injection scanner
+- `@hydroid/scanner-xss` — XSS scanner
 
 ## Getting Started
 
 ### Prerequisites
 
-- Bun runtime
-- Node.js 18+
-- Ollama or LM Studio
+- Bun >= 1.1
+- Node.js >= 18+
+- LM Studio (optional, for AI analysis)
 
 ### Installation
 
 ```bash
-# Install dependencies
 bun install
-
-# Install additional packages
-bun add typeorm reflect-metadata sqlite3
 ```
 
 ### Running the Application
@@ -158,61 +136,39 @@ bun run dev
 # Frontend
 cd apps/web
 bun run dev
+
+# Documentation
+cd apps/docs
+bun run dev
 ```
 
-## Scripts
-
-### Ollama Management
+### Database
 
 ```bash
-# Pull models
-ollama pull qwen2.5:14b
-ollama pull llama3.2
-
-# List models
-ollama list
-
-# Start Ollama server
-ollama serve
+cd apps/api
+bun run prisma:migrate
+bun run prisma:generate
 ```
 
-### LM Studio Integration
+## Project Structure
 
-```bash
-# Start LM Studio server on port 1234
-# Configure API endpoint in settings
 ```
+apps/api/src/
+├── controllers/     # API route controllers
+├── services/        # Business logic
+├── entities/        # Database entities (Prisma)
+├── tools/           # WebScanner, LLM, VulnerabilityAnalyzer
+├── factories/       # SkillFactory
+└── datasources/     # Database configuration
 
-## Database Schema
-
-### Core Entities
-
-- **User**: Authentication and profile
-- **AIAgent**: AI agent configurations
-- **AgentTask**: Task definitions
-- **AgentExecution**: Execution history
-- **FineTuneJob**: Fine-tuning jobs
-- **LoRAConfig**: LoRA configurations
-- **OsintSearch**: OSINT queries
-- **HumanProfile**: Human intelligence data
-- **Building**: Building intelligence
-- **Item**: Object tracking
-- **Weapon**: Premium content (restricted)
-
-## Security
-
-- JWT-based authentication
-- Role-based access control
-- Premium content restrictions
-
-## Roadmap
-
-- [x] Migrate from Prisma to TypeORM
-- [ ] Integrate Ollama + LM Studio
-- [ ] Build specialized skill modules
-- [ ] Create action-focused UI
-- [ ] Implement advanced scraping
-- [ ] Add image generation pipeline
+apps/web/
+├── app/             # Next.js App Router pages
+├── components/      # React components
+│   ├── security/    # Scanner UI components
+│   └── ui/          # Shared UI components
+├── store/           # Zustand stores
+└── services/        # API client functions
+```
 
 ## License
 

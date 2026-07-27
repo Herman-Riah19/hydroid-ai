@@ -38,8 +38,8 @@ export class SkillFactory implements OnInit {
     if (this.initialized) return;
 
     this.webScanner = createWebScanner({
-      timeout: config?.scanner?.timeout ?? 30000,
-      concurrentRequests: config?.scanner?.concurrentRequests ?? 5,
+      timeout: config?.scanner?.timeout ?? 10000,
+      concurrentRequests: config?.scanner?.concurrentRequests ?? 6,
     });
     await this.webScanner.initialize();
 
@@ -53,11 +53,13 @@ export class SkillFactory implements OnInit {
     this.llmSkill = new LLMSkill({
       provider: llmConfig.provider ?? "lmstudio",
       model: llmConfig.model ?? "qwen3-8b",
-      baseUrl: llmConfig.baseUrl ?? "http://10.23.0.216:1234",
+      baseUrl: llmConfig.baseUrl ?? "http://localhost:1234/v1",
       enabled: true,
       ...llmConfig,
     });
     await this.llmSkill.initialize();
+
+    this.webScanner.setLLM(this.llmSkill);
 
     this.initialized = true;
   }

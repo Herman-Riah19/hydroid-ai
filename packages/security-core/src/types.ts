@@ -44,6 +44,13 @@ export type VulnerabilityCategory =
   | "file-inclusion"
   | "other";
 
+export interface AiAnalysis {
+  riskSummary: string;
+  recommendations: string[];
+  attackVectors: string[];
+  priorityActions: string[];
+}
+
 export interface ScanResult {
   target: ScanTarget;
   status: ScanStatus;
@@ -53,6 +60,7 @@ export interface ScanResult {
   vulnerabilities: Vulnerability[];
   summary: ScanSummary;
   responses?: HttpResponseInfo[];
+  aiAnalysis?: AiAnalysis;
   error?: string;
 }
 

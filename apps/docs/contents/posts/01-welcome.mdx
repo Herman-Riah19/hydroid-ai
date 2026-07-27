@@ -1,139 +1,90 @@
 ---
-title: "Welcome to Artifex.js"
-description: "Discover Artifex.js — the open-source library for creative AI manipulation and generative art."
-banner_url: "/assets/image.png"
-created_at: "2023-10-05"
+title: "Bienvenue sur Hydroid AI"
+description: "Plateforme d'intelligence et d'analyse de sécurité web avec scanner de vulnérabilités et support IA local."
+created_at: "2025-01-01"
 ---
 
-# 🎨 Welcome to **Artifex.js**
+# Bienvenue sur Hydroid AI
 
-**Artifex.js** is a new open-source library designed to bridge the gap between **art and artificial intelligence**.  
-Whether you're an artist, developer, or creative technologist, Artifex.js empowers you to manipulate, blend, and generate artistic visuals through simple, composable APIs.
-
----
-
-## ✨ What Is Artifex.js?
-
-Artifex.js is a **JavaScript toolkit** built for creative developers who want to harness the power of **AI models** for artistic expression.  
-It provides high-level abstractions for working with **diffusion models, image transformers, style transfer systems**, and **neural composition tools** — all wrapped in a simple and expressive syntax.
-
-You can think of it as:
-> **TensorFlow for art**, or **Three.js for imagination**.
-
-### Key Capabilities
-
-- 🧠 **AI Model Manipulation** — Load, configure, and combine neural models with minimal setup.  
-- 🧩 **Composable Pipelines** — Chain transformations like color synthesis, style merging, and depth mapping.  
-- 🎨 **Generative Art Tools** — Create unique art pieces using latent diffusion or procedural blending.  
-- ⚡ **Fast & Modular** — Built with WebGPU acceleration and ESM-first architecture.  
-- 🪄 **Plug-in System** — Extend with your own artistic operators, filters, and render engines.
+**Hydroid AI** est une plateforme d'intelligence et d'analyse de sécurité web conçue pour l'OSINT (Open Source Intelligence), le scraping web, l'analyse de données et la génération de contenu par IA.
 
 ---
 
-## 🚀 Quick Start
+## Fonctionnalités principales
 
-Get started with a single command:
+### Scanner de sécurité web
+
+Un scanner complet qui analyse une URL cible via 6 modules exécutés en parallèle :
+
+- **En-têtes de sécurité** — Vérifie HSTS, CSP, X-Frame-Options et autres headers critiques
+- **Analyse des cookies** — Détecte les attributs de sécurité manquants (Secure, HttpOnly, SameSite)
+- **Configuration CORS** — Analyse les règles Cross-Origin Resource Sharing
+- **SSL/TLS** — Vérifie HTTPS et la présence du header HSTS
+- **Injection SQL** — Détecte error-based, time-based, union-based et boolean-based avec comparaison baseline
+- **XSS** — Détecte les vulnérabilités XSS réfléchies via analyse de reflection de payload
+
+### Analyse IA des résultats
+
+Quand LM Studio est configuré, les résultats du scan sont envoyés à un LLM local qui génère un résumé des risques, des recommandations de remédiation et des actions prioritaires.
+
+### Agents IA & Fine-Tuning
+
+Configuration et gestion d'agents IA avec support pour le fine-tuning via Ollama et LM Studio.
+
+---
+
+## Stack technique
+
+| Couche     | Technologie                         |
+| ---------- | ----------------------------------- |
+| Runtime    | Bun                                 |
+| Backend    | Ts.ED v8 + Prisma + SQLite          |
+| Frontend   | Next.js 16 + React 19 + Tailwind v4 |
+| UI         | shadcn/ui (Radix UI)                |
+| State      | Zustand                             |
+| Validation | Zod + react-hook-form               |
+| Monorepo   | Turborepo                           |
+
+---
+
+## Démarrage rapide
 
 ```bash
-npm install artifex
-````
+# Installation
+bun install
 
-Then create your first artistic generation:
+# Backend
+cd apps/api && bun run dev
 
-```tsx
-import { Artifex, Blend, StyleTransfer } from "artifex";
-
-const ai = new Artifex();
-
-const image = await ai
-  .load("model://stable-diffusion")
-  .pipe(Blend.with("texture://neon"))
-  .pipe(StyleTransfer.from("artist://van-gogh"))
-  .render("output.png");
-
-console.log("✨ Artistic image generated:", image);
+# Frontend
+cd apps/web && bun run dev
 ```
 
-> 💡 **Tip:** Artifex supports both browser and Node.js environments, as well as integration with frameworks like **Next.js**, **React**, or **Three.js**.
+---
+
+## Structure du projet
+
+```
+apps/api/        Backend Ts.ED
+apps/web/        Frontend Next.js
+apps/docs/       Documentation MDX
+packages/security-core/   Types et utilitaires security
+packages/scanner-web/     Analyseurs headers/cookies/CORS/SSL
+packages/scanner-sqli/    Scanner SQL injection
+packages/scanner-xss/     Scanner XSS
+packages/ui/              Composants UI shared
+```
 
 ---
 
-## 🧭 Why We Built This
+## Prochaines étapes
 
-The motivation behind Artifex.js is simple:
-
-> To make **AI-assisted creativity** more intuitive, reproducible, and open.
-
-Most AI art tools are black boxes — you provide a prompt, and you get an image back.
-With Artifex.js, you have full control over the creative pipeline:
-
-* Adjust latent spaces
-* Combine multiple styles
-* Reuse seeds and layers
-* Script complex generative flows
-
-By giving artists **programmable control** over AI models, Artifex.js transforms machine learning into a **collaborative creative partner** — not just a generator.
+- Intégration complète Ollama + LM Studio
+- Modules de skills spécialisés
+- UI orientée actions
+- Scraping avancé
+- Pipeline de génération d'images
 
 ---
 
-## 🧠 How It Works
-
-Artifex.js is built on three conceptual layers:
-
-1. **Core Engine** – Handles model loading, GPU acceleration, and tensor management.
-2. **Operators** – Perform artistic transformations (e.g., Blend, Morph, Transfer).
-3. **Pipelines** – Combine multiple operators into reproducible workflows.
-
-This modular architecture makes it easy to experiment and extend.
-
-> 🧩 **Note:** Every operator in Artifex is functional and composable — meaning you can chain them like JavaScript array methods.
-
----
-
-## 📚 Documentation Roadmap
-
-This documentation will guide you through everything you need to know:
-
-1. **Getting Started** – Installation, setup, and your first generation
-2. **Core Concepts** – Understanding the Artifex architecture
-3. **Operators API** – Detailed reference for transformations
-4. **Pipeline Recipes** – Real-world creative examples
-5. **Extending Artifex** – Building custom operators and renderers
-6. **Best Practices** – Performance tips, ethics, and artistic intent
-
----
-
-## ⚖️ Ethics & Responsibility
-
-AI art can inspire, but it also raises questions about authorship and originality.
-At Artifex.js, we believe **tools should amplify human creativity, not replace it**.
-Our mission is to empower artists to **own their process**, **curate their models**, and **celebrate the human touch** in digital creation.
-
-> ⚠️ **Reminder:** Always respect model licenses, dataset origins, and the rights of living artists.
-
----
-
-## 🧩 Join the Community
-
-Artifex.js is built in the open — and we want you to be part of it!
-
-* 💬 Join our [Discord Community](https://discord.gg/artifex)
-* 🐙 Contribute on [GitHub](https://github.com/artifex/artifex.js)
-* 📦 Explore plugins on [NPM](https://npmjs.com/package/artifex)
-* 🖼️ Share your creations on [X / Twitter](https://x.com/artifexjs)
-
-> ✨ Every pull request is a brushstroke in the evolution of generative art.
-
----
-
-## 🏁 Next Steps
-
-👉 Continue to [Getting Started →](/docs/getting-started)
-
-Welcome to the future of **creative AI engineering** —
-where **code becomes canvas** and **algorithms become art**.
-Let’s build imagination together.
-
----
-
-*© 2025 Artifex.js — Crafted for artists, designed for developers.
+_© 2025 Hydroid AI_

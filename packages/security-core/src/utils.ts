@@ -23,3 +23,33 @@ export function createVulnerabilityId(): string {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export async function runWithConcurrency<T>(
+  tasks: (() => Promise<T>)[],
+  concurrency: number,
+): Promise<T[]> {
+  const results: T[] = [];
+  const executing = new Set<Promise<void>>();
+  let index = 0;
+
+  async function runNext(): Promise<void> {
+    if (index >= tasks.length) return;
+    const i = index++;
+    const task = tasks[i]!;
+    const promise = task().then((result) => {
+      results[i] = result;
+    });
+    const tracked = promise.then(() => {
+      executing.delete(tracked);
+    });
+    executing.add(tracked);
+    if (executing.size >= concurrency) {
+      await Promise.race(executing);
+    }
+    await runNext();
+  }
+
+  await runNext();
+  await Promise.all(executing);
+  return results;
+}

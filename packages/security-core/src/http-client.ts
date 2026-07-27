@@ -5,7 +5,7 @@ export class HttpClient {
 
   constructor(config: ScannerConfig = {}) {
     this.defaultConfig = {
-      timeout: config.timeout ?? 30000,
+      timeout: config.timeout ?? 10000,
       followRedirects: config.followRedirects ?? true,
       userAgent: config.userAgent ?? "HydroidSecurityScanner/1.0",
       concurrentRequests: config.concurrentRequests ?? 5,

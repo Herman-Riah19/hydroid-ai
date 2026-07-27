@@ -22,6 +22,7 @@
     "skipLibCheck": true,
     "lib": ["ESNext", "esnext.asynciterable"],
     "declaration": false,
+    "declarationMap": false,
     "noResolve": false,
     "preserveConstEnums": true,
     "sourceMap": true,

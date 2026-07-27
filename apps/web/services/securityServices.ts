@@ -29,6 +29,13 @@ export interface ScanSummary {
   info: number;
 }
 
+export interface AiAnalysis {
+  riskSummary: string;
+  recommendations: string[];
+  attackVectors: string[];
+  priorityActions: string[];
+}
+
 export interface ScanResult {
   target: { url: string };
   status: string;
@@ -36,6 +43,7 @@ export interface ScanResult {
   endTime?: string;
   vulnerabilities: Vulnerability[];
   summary: ScanSummary;
+  aiAnalysis?: AiAnalysis;
   error?: string;
 }
 

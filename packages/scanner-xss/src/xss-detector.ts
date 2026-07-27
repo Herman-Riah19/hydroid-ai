@@ -4,7 +4,10 @@ import type {
   ScannerConfig,
   BaseScanner,
 } from "@hydroid/security-core";
-import { createVulnerabilityId } from "@hydroid/security-core";
+import {
+  createVulnerabilityId,
+  runWithConcurrency,
+} from "@hydroid/security-core";
 import { HttpClient } from "@hydroid/security-core";
 import { XSS_PAYLOADS } from "./payloads.js";
 
@@ -22,26 +25,29 @@ export class XssScanner implements BaseScanner {
     target: ScanTarget,
     config?: ScannerConfig,
   ): Promise<Vulnerability[]> {
-    const vulns: Vulnerability[] = [];
-
     const baseUrl = target.url.split("?")[0] ?? target.url;
     const param = this.guessParam(target.url) || "q";
+    const concurrency = config?.concurrentRequests ?? 10;
 
-    for (const xss of XSS_PAYLOADS) {
-      const testUrl = `${baseUrl}?${param}=${encodeURIComponent(xss.payload)}`;
-      try {
-        const { response, body } = await this.http.requestRaw(testUrl);
-
-        if (xss.type === "reflected") {
-          const vuln = this.checkReflected(body, xss, param, testUrl);
-          if (vuln) vulns.push(vuln);
+    const tasks: (() => Promise<Vulnerability | null>)[] = XSS_PAYLOADS.map(
+      (xss) => async () => {
+        const testUrl = `${baseUrl}?${param}=${encodeURIComponent(xss.payload)}`;
+        try {
+          const { response, body } = await this.http.requestRaw(testUrl);
+          if (xss.type === "reflected") {
+            return this.checkReflected(body, xss, param, testUrl);
+          }
+          return null;
+        } catch {
+          return null;
         }
-      } catch {
-        continue;
-      }
-    }
+      },
+    );
 
-    return this.deduplicate(vulns);
+    const results = await runWithConcurrency(tasks, concurrency);
+    return this.deduplicate(
+      results.filter((v): v is Vulnerability => v !== null),
+    );
   }
 
   private guessParam(url: string): string | null {

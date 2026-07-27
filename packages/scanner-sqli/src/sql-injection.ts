@@ -4,7 +4,10 @@ import type {
   ScannerConfig,
   BaseScanner,
 } from "@hydroid/security-core";
-import { createVulnerabilityId } from "@hydroid/security-core";
+import {
+  createVulnerabilityId,
+  runWithConcurrency,
+} from "@hydroid/security-core";
 import { HttpClient } from "@hydroid/security-core";
 import { SQLI_PAYLOADS, SQLI_PARAMS } from "./payloads.js";
 
@@ -23,10 +26,11 @@ export class SQLInjectionScanner implements BaseScanner {
     target: ScanTarget,
     config?: ScannerConfig,
   ): Promise<Vulnerability[]> {
-    const vulns: Vulnerability[] = [];
-
     const baseUrl = target.url.split("?")[0] ?? target.url;
     const existingParams = this.parseParams(target.url);
+    const concurrency = config?.concurrentRequests ?? 10;
+
+    const tasks: (() => Promise<Vulnerability | null>)[] = [];
 
     for (const param of SQLI_PARAMS) {
       if (existingParams.length > 0 && !existingParams.includes(param))
@@ -39,27 +43,30 @@ export class SQLInjectionScanner implements BaseScanner {
           sqli.payload,
           existingParams,
         );
-        try {
-          const { response, body } = await this.http.requestRaw(testUrl, {
-            headers: { ...target.headers },
-          });
-
-          const vuln = await this.analyzeResponse(
-            body,
-            response.statusCode,
-            sqli,
-            param,
-            testUrl,
-            target.url,
-          );
-          if (vuln) vulns.push(vuln);
-        } catch {
-          continue;
-        }
+        tasks.push(async () => {
+          try {
+            const { response, body } = await this.http.requestRaw(testUrl, {
+              headers: { ...target.headers },
+            });
+            return this.analyzeResponse(
+              body,
+              response.statusCode,
+              sqli,
+              param,
+              testUrl,
+              target.url,
+            );
+          } catch {
+            return null;
+          }
+        });
       }
     }
 
-    return this.deduplicate(vulns);
+    const results = await runWithConcurrency(tasks, concurrency);
+    return this.deduplicate(
+      results.filter((v): v is Vulnerability => v !== null),
+    );
   }
 
   private parseParams(url: string): string[] {
@@ -96,7 +103,7 @@ export class SQLInjectionScanner implements BaseScanner {
     originalUrl: string,
   ): Promise<Vulnerability | null> {
     if (sqli.technique === "error-based") {
-      for (const pattern of sqli.errorPatterns) {
+      for (const pattern of sqli.errorPatterns ?? []) {
         if (pattern.test(body)) {
           return {
             id: createVulnerabilityId(),
