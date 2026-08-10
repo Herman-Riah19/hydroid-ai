@@ -6,11 +6,7 @@ import {
 } from "@hydroid/scanner-web";
 import { SQLInjectionScanner } from "@hydroid/scanner-sqli";
 import { XssScanner } from "@hydroid/scanner-xss";
-import {
-  HttpClient,
-  computeSummary,
-  runWithConcurrency,
-} from "@hydroid/security-core";
+import { HttpClient, computeSummary } from "@hydroid/security-core";
 import type {
   ScanTarget,
   ScanResult,
@@ -137,11 +133,6 @@ export class WebScanner {
       type: "init",
       message: `Démarrage du scan de sécurité pour: ${options.url}`,
     });
-    this.logger.info(`${modules.length} modules de scan configurés`);
-    options.onEvent?.({
-      type: "info",
-      message: `${modules.length} modules de scan configurés — exécution en parallèle`,
-    });
 
     const validModules = modules.filter((name) => {
       if (!this.scanners.has(name)) {
@@ -151,72 +142,67 @@ export class WebScanner {
       return true;
     });
 
-    for (const moduleName of validModules) {
-      const label = SCANNER_LABELS[moduleName] ?? moduleName;
-      options.onEvent?.({
-        type: "scan-start",
-        message: `Scan du module: ${label}...`,
-        data: { module: moduleName },
-      });
-    }
+    this.logger.info(`${validModules.length} modules de scan configurés`);
+    options.onEvent?.({
+      type: "info",
+      message: `${validModules.length} modules de scan configurés — exécution séquentielle`,
+    });
 
-    const moduleTasks = validModules.map((moduleName) => {
+    const allVulns: Vulnerability[] = [];
+
+    for (const moduleName of validModules) {
       const scanner = this.scanners.get(moduleName)!;
       const label = SCANNER_LABELS[moduleName] ?? moduleName;
 
-      return async (): Promise<{
-        module: string;
-        label: string;
-        vulns: Vulnerability[];
-        error?: string;
-      }> => {
-        try {
-          const vulns = await scanner.scan(target, this.config);
-          return { module: moduleName, label, vulns };
-        } catch (error) {
-          const errMsg =
-            error instanceof Error ? error.message : "Erreur inconnue";
-          this.logger.error(`Scanner ${moduleName} failed:`, error);
-          return { module: moduleName, label, vulns: [], error: errMsg };
+     
+      options.onEvent?.({
+        type: "scan-start",
+        message: `Lancement du module : ${label}...`,
+        data: { module: moduleName },
+      });
+
+      try {
+        
+        const vulns = await scanner.scan(target, this.config);
+        allVulns.push(...vulns);
+
+        // 3. Émission immédiate du résultat dès la fin de ce module
+        if (vulns.length === 0) {
+          options.onEvent?.({
+            type: "scan-ok",
+            message: `✓ ${label}: Aucune vulnérabilité détectée`,
+            data: { module: moduleName },
+          });
+        } else {
+          const crit = vulns.filter(
+            (v) => v.severity === "critical" || v.severity === "high",
+          ).length;
+
+          options.onEvent?.({
+            type: "scan-vulns",
+            message: `⚠ ${label}: ${vulns.length} vulnérabilité(s) trouvée(s) dont ${crit} critique(s)`,
+            data: {
+              module: moduleName,
+              count: vulns.length,
+              critical: crit,
+            },
+          });
         }
-      };
-    });
+        
+      } catch (error) {
+        const errMsg =
+          error instanceof Error ? error.message : "Erreur inconnue";
+        this.logger.error(`Scanner ${moduleName} failed:`, error);
 
-    const results = await runWithConcurrency(
-      moduleTasks,
-      this.config.concurrentRequests ?? 6,
-    );
-
-    const allVulns: Vulnerability[] = [];
-    for (const result of results) {
-      allVulns.push(...result.vulns);
-
-      if (result.error) {
         options.onEvent?.({
           type: "scan-error",
-          message: `✗ ${result.label}: Erreur - ${result.error}`,
-        });
-      } else if (result.vulns.length === 0) {
-        options.onEvent?.({
-          type: "scan-ok",
-          message: `✓ ${result.label}: Aucune vulnérabilité détectée`,
-        });
-      } else {
-        const crit = result.vulns.filter(
-          (v) => v.severity === "critical" || v.severity === "high",
-        ).length;
-        options.onEvent?.({
-          type: "scan-vulns",
-          message: `⚠ ${result.label}: ${result.vulns.length} vulnérabilité(s) trouvée(s) dont ${crit} critique(s)`,
-          data: {
-            module: result.module,
-            count: result.vulns.length,
-            critical: crit,
-          },
+          message: `✗ ${label}: Erreur - ${errMsg}`,
+          data: { module: moduleName, error: errMsg },
         });
       }
     }
 
+    // Récupération des en-têtes HTTP de la cible
     let httpResponse;
     try {
       options.onEvent?.({
@@ -234,18 +220,19 @@ export class WebScanner {
 
     const summary = computeSummary(allVulns);
 
+    // Analyse IA facultative si des vulnérabilités ont été détectées
     let aiAnalysis: AiAnalysis | undefined;
     if (this.llm && allVulns.length > 0) {
       options.onEvent?.({
         type: "info",
-        message: "Analyse IA en cours via LM Studio...",
+        message: "Analyse IA en cours...",
       });
 
       try {
         aiAnalysis = await this.runLLMAnalysis(allVulns, options.url);
         options.onEvent?.({
           type: "info",
-          message: "✓ Analyse IA terminée",
+          message: "✓ Analyse IA terminée avec succès",
         });
       } catch (error) {
         const errMsg =

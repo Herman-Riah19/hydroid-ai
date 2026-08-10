@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   {
     value: "agents",
     label: "Agents",
-    url: "/dashboard/ai-hub/agents",
+    url: "/dashboard/ai-hub",
     icon: Bot,
   },
   {

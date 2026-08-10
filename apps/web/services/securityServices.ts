@@ -102,9 +102,19 @@ export class SecurityServices {
     return res.json();
   }
 
-  static streamScan(url: string, token: string): EventSource {
+  static async streamScan(url: string, signal: AbortSignal) {
     const params = new URLSearchParams({ url });
-    const es = new EventSource(`${API_URL}/api/security/scan/stream?${params}`);
-    return es;
+    const response = await fetch(`${API_URL}/api/security/scan/stream?${params}`, {
+      signal,
+      headers: {
+        "Accept": "*/*"
+      }
+    });
+
+    if (!response.ok || !response.body) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    return response.body.getReader();
   }
 }

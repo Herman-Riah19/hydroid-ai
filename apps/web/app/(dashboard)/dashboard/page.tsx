@@ -29,8 +29,9 @@ export default function SecurityPage() {
   const [scanning, setScanning] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [activeTab, setActiveTab] = useState("all" as string);
-  const esRef = useRef<EventSource | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
+  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
+  const controllerRef = useRef<AbortController | null>(null);
 
   const handleScan = useCallback(async () => {
     if (!url.trim() || !token) return;
@@ -40,57 +41,77 @@ export default function SecurityPage() {
     setLogs([]);
     setActiveTab("all");
 
-    const es = SecurityServices.streamScan(url.trim(), token);
-    esRef.current = es;
+    const controller = new AbortController();
+    controllerRef.current = controller;
 
     const addLog = (type: string, message: string) => {
       setLogs((prev) => [...prev, { type, message, timestamp: fmtTime() }]);
     };
 
-    es.addEventListener("connected", (e: MessageEvent) => {
-      const data = JSON.parse(e.data) as ScanEvent;
-      addLog(data.type, data.message);
-    });
+    try {
+      const reader = await SecurityServices.streamScan(url, controller.signal);
+      readerRef.current = reader;
 
-    const progressEvents = [
-      "init",
-      "scan-start",
-      "scan-ok",
-      "scan-vulns",
-      "scan-error",
-      "info",
-    ];
-    for (const et of progressEvents) {
-      es.addEventListener(et, (e: MessageEvent) => {
-        const data = JSON.parse(e.data) as ScanEvent;
-        addLog(data.type, data.message);
-      });
+      const decoder = new TextDecoder("utf-8");
+      let buffer = "";
+
+      // Loop standard pour la lecture du stream
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // Conserver la ligne incomplète
+
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (!trimmedLine) continue;
+
+          try {
+            const data = JSON.parse(trimmedLine) as ScanEvent & { data?: ScanResult };
+
+            if (data.message) {
+              addLog(data.type, data.message);
+            }
+
+            if (data.type === "complete") {
+              if (data.data) {
+                setResult(data.data);
+              }
+              setScanning(false);
+              return;
+            }
+
+            if (data.type === "error") {
+              addLog("error", data.message || "Erreur lors du scan");
+              setScanning(false);
+              return;
+            }
+          } catch (err) {
+            console.error("Erreur de parsing de la ligne :", trimmedLine, err);
+          }
+        }
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        addLog("error", "Erreur lors de la connexion au scanner");
+      }
+    } finally {
+      setScanning(false);
     }
-
-    es.addEventListener("complete", (e: MessageEvent) => {
-      const data = JSON.parse(e.data) as ScanEvent & { data: ScanResult };
-      addLog("complete", data.message);
-      setResult(data.data);
-      setScanning(false);
-      es.close();
-    });
-
-    es.addEventListener("error", (e: MessageEvent) => {
-      const data = JSON.parse(e.data) as ScanEvent;
-      addLog("error", data.message);
-      setScanning(false);
-      es.close();
-    });
-
-    es.onerror = () => {
-      addLog("error", "Connexion perdue avec le serveur");
-      setScanning(false);
-      es.close();
-    };
   }, [url, token]);
 
   const handleStop = useCallback(() => {
-    esRef.current?.close();
+    if (readerRef.current) {
+      readerRef.current.cancel();
+    }
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
     setScanning(false);
     setLogs((prev) => [
       ...prev,

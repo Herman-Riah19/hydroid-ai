@@ -4,13 +4,17 @@ import { Post, Get, Returns, Summary, Title, Description } from "@tsed/schema";
 import { Docs } from "@tsed/swagger";
 import { SecurityScannerService } from "src/services/SecurityScannerService.js";
 import type { ScanResult } from "@hydroid/security-core";
-import type { Response } from "express";
+import { Readable } from "node:stream";
+import { Logger } from "@tsed/logger";
 
 @Controller("/security")
 @Docs("api-docs")
 export class SecurityController {
   @Inject()
   private securityService!: SecurityScannerService;
+
+  @Inject()
+  private logger!: Logger;
 
   @Post("/scan")
   @Title("Security Scan")
@@ -65,44 +69,51 @@ export class SecurityController {
   }> {
     return this.securityService.fullAudit(body.url);
   }
-
   @Get("/scan/stream")
-  @Title("Security Scan SSE")
-  @Summary("Run security scan with real-time SSE streaming")
-  @Description("Streams scan progress events via Server-Sent Events")
+  @Title("Security Scan Stream")
+  @Summary("Run security scan with real-time streaming")
+  @Description("Streams scan progress events via NDJSON HTTP Stream")
   async scanUrlStream(
     @QueryParams("url") url: string,
-    @Context() ctx: any,
-  ): Promise<void> {
-    const response = ctx.getResponse() as Response;
+    @Context() ctx: any
+  ): Promise<Readable> {
+    this.logger.info(`Scan URL stream started for: ${url}`);
 
-    response.setHeader("Content-Type", "text/event-stream");
-    response.setHeader("Cache-Control", "no-cache");
-    response.setHeader("Connection", "keep-alive");
-    response.setHeader("X-Accel-Buffering", "no");
-    response.flushHeaders();
+    const stream = new Readable({
+      read() {}
+    });
 
-    response.write(
-      `event: connected\ndata: ${JSON.stringify({ message: "Scan connecté" })}\n\n`,
-    );
-
-    try {
-      const result = await this.securityService.scanUrl(url, (event) => {
-        response.write(
-          `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`,
+    (async () => {
+      try {
+        const result = await this.securityService.scanUrl(url, (event: any) => {
+          this.logger.info(`Scan event: ${event.type}`);
+          
+          stream.push(`${JSON.stringify(event)}\n`);
+        });
+        stream.push(
+          `${JSON.stringify({
+            type: "complete",
+            message: "Scan terminé avec succès",
+            data: result
+          })}\n`
         );
-      });
 
-      response.write(
-        `event: complete\ndata: ${JSON.stringify({ type: "complete", message: "Scan terminé avec succès", data: result })}\n\n`,
-      );
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : "Erreur inconnue";
-      response.write(
-        `event: error\ndata: ${JSON.stringify({ type: "error", message: errMsg })}\n\n`,
-      );
-    } finally {
-      response.end();
-    }
+      } catch (error) {
+        const errMsg = error instanceof Error ? error.message : "Erreur inconnue";
+        this.logger.error(`Scan error: ${errMsg}`);
+        
+        stream.push(
+          `${JSON.stringify({
+            type: "error",
+            message: errMsg
+          })}\n`
+        );
+      } finally {
+        // Fermeture du flux
+        stream.push(null);
+      }
+    })();
+
+    return stream;
   }
 }

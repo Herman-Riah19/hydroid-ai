@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import compress from "compression";
 import cors from "cors";
 import methodOverride from "method-override";
+import "@tsed/sse";
 
 @Configuration({
   ...config,
@@ -27,9 +28,7 @@ import methodOverride from "method-override";
     "/api": [...Object.values(rest)],
   },
   middlewares: [
-    "cors",
     "cookie-parser",
-    "compression",
     "method-override",
     "json-parser",
     { use: "urlencoded-parser", options: { extended: true } },
@@ -50,9 +49,30 @@ export class Server {
 
   $beforeRoutesInit(): void {
     this.app
-      .use(cors())
+      // 1. Configuration CORS explicite pour votre Next.js (port 3000 ou 3001)
+      .use(
+        cors({
+          // Autorise localhost ET toutes les adresses IP locales en dev
+          origin: (origin, callback) => {
+            // Permet les requêtes sans origine (comme Postman) ou n'importe quel port local/IP
+            if (!origin || origin.includes("localhost") || origin.includes("10.23.0.216") || origin.includes("127.0.0.1")) {
+              callback(null, true);
+            } else {
+              callback(new Error("Bloqué par CORS"));
+            }
+          },
+          credentials: true,
+        })
+      )
       .use(cookieParser())
-      .use(compress({}))
+      .use(compress({
+        filter: (req, res) => {
+          if (req.headers.accept === "text/event-stream") {
+            return false; // Ne pas compresser si c'est du SSE
+          }
+          return compress.filter(req, res);
+        }
+      }))
       .use(methodOverride());
   }
 }

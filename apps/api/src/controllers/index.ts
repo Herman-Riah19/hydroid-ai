@@ -6,3 +6,4 @@ export * from "./FineTuneController.js";
 export * from "./SecurityController.js";
 export * from "./UserController.js";
 export * from "./WeaponController.js";
+export * from "./streamingController.js";
