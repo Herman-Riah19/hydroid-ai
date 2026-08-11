@@ -10,6 +10,8 @@ import { SeverityFilter } from "@/components/security/severity-filter";
 import { VulnerabilityList } from "@/components/security/vulnerability-list";
 import { ScanPlaceholder } from "@/components/security/scan-placeholder";
 import { AiAnalysisCard } from "@/components/security/ai-analysis-card";
+import { Badge } from "@repo/ui/components/ui/badge";
+import { Terminal } from "lucide-react";
 import type { ScanResult, ScanEvent } from "@/services/securityServices";
 
 interface LogEntry {
@@ -30,7 +32,9 @@ export default function SecurityPage() {
   const [result, setResult] = useState<ScanResult | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [activeTab, setActiveTab] = useState("all");
-  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
+  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(
+    null,
+  );
   const controllerRef = useRef<AbortController | null>(null);
 
   const handleScan = useCallback(async () => {
@@ -72,7 +76,9 @@ export default function SecurityPage() {
           if (!trimmedLine) continue;
 
           try {
-            const data = JSON.parse(trimmedLine) as ScanEvent & { data?: ScanResult };
+            const data = JSON.parse(trimmedLine) as ScanEvent & {
+              data?: ScanResult;
+            };
 
             if (data.message) {
               addLog(data.type, data.message);
@@ -131,52 +137,70 @@ export default function SecurityPage() {
   const summary = result?.summary;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Security Scanner
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Analyse de sécurité automatisée pour applications web
-          </p>
-        </div>
+    <div className="relative overflow-x-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute top-1/4 -left-24 h-80 w-80 rounded-full bg-secondary/10 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
       </div>
 
-      <ScanInput
-        url={url}
-        scanning={scanning}
-        onUrlChange={setUrl}
-        onScan={handleScan}
-        onStop={handleStop}
-      />
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-2">
-          <SecurityTerminal logs={logs} className="h-full min-h-100" />
+      <div className="relative space-y-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <Badge
+              variant="outline"
+              className="mb-3 gap-1.5 border-primary/30 bg-primary/10 text-primary"
+            >
+              <Terminal className="size-3" />
+              Scanner de sécurité
+            </Badge>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Security{" "}
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Scanner
+              </span>
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Analyse de sécurité automatisée pour applications web
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-4 lg:col-span-3 h-auto">
-          {scanning && <ScanLoading />}
+        <ScanInput
+          url={url}
+          scanning={scanning}
+          onUrlChange={setUrl}
+          onScan={handleScan}
+          onStop={handleStop}
+        />
 
-          {result && summary && (
-            <>
-              <SeverityFilter
-                summary={summary}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
-              <VulnerabilityList
-                vulnerabilities={filteredVulns}
-                activeTab={activeTab}
-              />
-              {result.aiAnalysis && (
-                <AiAnalysisCard analysis={result.aiAnalysis} />
-              )}
-            </>
-          )}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <SecurityTerminal logs={logs} className="h-full min-h-100" />
+          </div>
 
-          {!result && !scanning && <ScanPlaceholder />}
+          <div className="space-y-4 lg:col-span-3 h-auto">
+            {scanning && <ScanLoading />}
+
+            {result && summary && (
+              <>
+                <SeverityFilter
+                  summary={summary}
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
+                <VulnerabilityList
+                  vulnerabilities={filteredVulns}
+                  activeTab={activeTab}
+                />
+                {result.aiAnalysis && (
+                  <AiAnalysisCard analysis={result.aiAnalysis} />
+                )}
+              </>
+            )}
+
+            {!result && !scanning && <ScanPlaceholder />}
+          </div>
         </div>
       </div>
     </div>

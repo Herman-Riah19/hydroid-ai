@@ -33,7 +33,8 @@ const NAV_ITEMS = [
 
 function getActiveTab(pathname: string): string {
   if (pathname === "/dashboard") return "scanner";
-  if (pathname.startsWith("/dashboard/ai-hub/agents")) return "agents";
+  if (pathname.startsWith("/dashboard/ai-hub/fine-tuning")) return "config";
+  if (pathname.startsWith("/dashboard/ai-hub")) return "agents";
   return "scanner";
 }
 
@@ -56,10 +57,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="flex h-14 shrink-0 items-center gap-4 border-b border-border px-6">
-        <span className="mr-4 text-sm font-semibold text-foreground">
-          Hydroid
-        </span>
+      <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-4 border-b border-border bg-background/80 px-6 backdrop-blur-xl">
+        <Link href="/dashboard" className="mr-4 flex items-center gap-2">
+          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Shield className="size-4" />
+          </span>
+          <span className="text-sm font-bold tracking-tight text-foreground">
+            Hydroid
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              AI
+            </span>
+          </span>
+        </Link>
 
         <Tabs value={activeTab}>
           <TabsList>
@@ -79,7 +88,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <Avatar className="size-6">
-                  <AvatarFallback className="text-xs">
+                  <AvatarFallback className="bg-primary/15 text-[10px] text-primary">
                     {(user?.name || user?.email || "A").charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -89,6 +98,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <div className="border-b border-border px-3 py-2">
+                <p className="text-sm font-medium text-foreground">
+                  {user?.name || "Admin"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {user?.email || "Compte hydroid"}
+                </p>
+              </div>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 size-4" />
                 Déconnexion

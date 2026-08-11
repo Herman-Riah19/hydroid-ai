@@ -20,22 +20,22 @@ export function ScanInput({
   onStop,
 }: ScanInputProps) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-            <Shield className="size-5 text-muted-foreground" />
+          <div className="hidden size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-muted sm:flex">
+            <Shield className="size-5 text-primary" />
           </div>
-          <div className="min-w-0 flex-1">
-            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Cible
-            </label>
+          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 transition-colors focus-within:border-primary/40">
+            <span className="select-none font-mono text-sm text-primary">
+              $
+            </span>
             <input
               type="url"
               value={url}
               onChange={(e) => onUrlChange(e.target.value)}
-              placeholder="https://exemple.com"
-              className="w-full border-0 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/50"
+              placeholder="hydroid scan --target https://exemple.com"
+              className="h-11 w-full border-0 bg-transparent font-mono text-sm text-foreground outline-none placeholder:font-sans placeholder:text-muted-foreground/50"
               disabled={scanning}
               onKeyDown={(e) => e.key === "Enter" && onScan()}
             />

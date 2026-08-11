@@ -42,11 +42,11 @@ export function AiAnalysisCard({ analysis }: AiAnalysisCardProps) {
     <Card>
       <CardContent className="p-4">
         <div className="mb-3 flex items-center gap-2">
-          <div className="flex size-7 items-center justify-center rounded-md bg-muted">
-            <Brain className="size-4 text-foreground" />
+          <div className="flex size-7 items-center justify-center rounded-md bg-primary/10">
+            <Brain className="size-4 text-primary" />
           </div>
           <h3 className="text-sm font-semibold text-foreground">Analyse IA</h3>
-          <span className="ml-auto rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          <span className="ml-auto rounded border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
             LM Studio
           </span>
         </div>

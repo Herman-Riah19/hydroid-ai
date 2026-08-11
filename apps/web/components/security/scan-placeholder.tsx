@@ -1,6 +1,13 @@
 "use client";
 
-import { Search, Globe, Lock, FileSearch, ScanLine } from "lucide-react";
+import {
+  Search,
+  Globe,
+  Lock,
+  FileSearch,
+  ScanLine,
+  Terminal,
+} from "lucide-react";
 import { Card, CardContent } from "@repo/ui/components/ui/card";
 
 const FEATURES = [
@@ -14,8 +21,8 @@ export function ScanPlaceholder() {
   return (
     <Card className="h-full">
       <CardContent className="flex flex-col items-center justify-center p-12 text-center">
-        <div className="mb-6 rounded-2xl border border-border bg-muted p-4">
-          <Search className="size-10 text-muted-foreground/50" />
+        <div className="mb-6 rounded-2xl border border-border bg-muted p-4 shadow-lg shadow-black/20">
+          <Search className="size-10 text-primary/50" />
         </div>
 
         <h3 className="mb-1 text-sm font-semibold text-foreground">
@@ -37,6 +44,10 @@ export function ScanPlaceholder() {
             </div>
           ))}
         </div>
+
+        <p className="mt-6 flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground/60">
+          <Terminal className="size-3" />$ hydroid scan --help
+        </p>
       </CardContent>
     </Card>
   );

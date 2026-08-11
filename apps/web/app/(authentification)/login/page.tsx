@@ -2,14 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@repo/ui/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/ui/components/ui/card";
 import { useAuthStore } from "@/store/auth-store";
 import { UserServices } from "@/services/userServices";
 import { useForm } from "react-hook-form";
@@ -17,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInFormData, SignInSchema } from "@/validators/user-validator";
 import { Form } from "@repo/ui/components/ui/form";
 import { FormTextfield } from "@repo/ui/components/composable/FormTextfield";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { Loader } from "lucide-react";
 
 export default function LoginPage() {
@@ -53,60 +48,64 @@ export default function LoginPage() {
       // Redirect to dashboard after successful login
       router.push("/dashboard");
     } catch (err) {
-      setError("Invalid credentials");
+      setError("Identifiants invalides");
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-gray-100">Connexion</CardTitle>
-          <CardDescription className="text-gray-400">
-            Connectez-vous à votre compte
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...formData}>
-            <form
-              onSubmit={formData.handleSubmit(handleSubmit)}
-              className="space-y-4"
-            >
-              <FormTextfield
-                form={formData}
-                label="Email"
-                placeholder="Entrer votre nom"
-                type="email"
-                {...formData.register("email")}
-              />
-              <FormTextfield
-                form={formData}
-                label="Mot de passe"
-                placeholder="Entrer votre mot de passe"
-                type="password"
-                {...formData.register("password")}
-              />
-              {error && <div className="text-gray-400 text-sm">{error}</div>}
-              <Button
-                type="submit"
-                className="w-full bg-gray-100 text-black hover:bg-gray-200"
-                disabled={loading}
-              >
-                {loading ? <Loader className="animate-spin" /> : "Se connecter"}
-              </Button>
-            </form>
-          </Form>
-          <div className="mt-4 text-center">
-            <span className="text-sm text-gray-400">
-              Pas de compte?{" "}
-              <a href="/register" className="text-gray-300 hover:underline">
-                S'inscrire
-              </a>
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <AuthShell>
+      <div className="p-6 sm:p-8">
+        <h1 className="text-xl font-bold tracking-tight text-foreground">
+          Connexion
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Connectez-vous à votre compte
+        </p>
+
+        <Form {...formData}>
+          <form
+            onSubmit={formData.handleSubmit(handleSubmit)}
+            className="mt-6 space-y-4"
+          >
+            <FormTextfield
+              form={formData}
+              label="Email"
+              placeholder="Entrer votre email"
+              type="email"
+              {...formData.register("email")}
+            />
+            <FormTextfield
+              form={formData}
+              label="Mot de passe"
+              placeholder="Entrer votre mot de passe"
+              type="password"
+              {...formData.register("password")}
+            />
+            {error && <div className="text-sm text-destructive">{error}</div>}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader className="animate-spin" />
+                  Connexion...
+                </>
+              ) : (
+                "Se connecter"
+              )}
+            </Button>
+          </form>
+        </Form>
+
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          Pas de compte ?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-primary hover:underline"
+          >
+            S&apos;inscrire
+          </Link>
+        </div>
+      </div>
+    </AuthShell>
   );
 }
